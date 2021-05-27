@@ -1,5 +1,11 @@
 <template>
-  <BudgetList />
+
+  <div>
+    adsdas
+    <BudgetList />
+
+  </div>
+
 </template>
 
 <script>

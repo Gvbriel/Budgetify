@@ -22,6 +22,10 @@ Route::get('/budget', function (){
     return response()->json($x);
 });
 
+Route::group(['middleware' => ['cors', 'json.response']], function () {
+
+});
+
 Route::namespace('\\')->group(function(){
     Route::resource('budget', BudgetController::class);
     Route::resource('card', CardController::class);

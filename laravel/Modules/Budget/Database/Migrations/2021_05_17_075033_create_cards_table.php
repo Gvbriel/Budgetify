@@ -19,7 +19,7 @@ class CreateCardsTable extends Migration
             $table->longText('number');
             $table->text('type');
             $table->double('balance');
-            $table->foreignId('owner_id');
+            $table->foreignId('owner_id')->references('id')->on('users');
             $table->timestamps();
         });
     }

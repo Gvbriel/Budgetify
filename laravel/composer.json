@@ -10,7 +10,9 @@
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
+        "laravel/passport": "^10.1",
         "laravel/tinker": "^2.5",
+        "laravel/ui": "^2.0",
         "nwidart/laravel-modules": "^8.2"
     },
     "require-dev": {
@@ -54,7 +56,10 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "platform": {
+            "php": "7.4.3"
+        }
     },
     "minimum-stability": "dev",
     "prefer-stable": true

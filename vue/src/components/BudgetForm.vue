@@ -2,127 +2,133 @@
   <div class="container-fluid">
     <div class="w mx-auto">
 
-      <el-form ref="form" :model="sizeForm" label-width="120px" size="mini">
+      <el-form ref="form" :model="sizeForm" @submit="onSubmit" label-width="120px" size="mini">
 
-        <div class="row">
-          <div class="col">
+        <div class="d-flex">
+          <div class="mr-auto">
             <el-form-item label="Type">
-              <el-radio-group v-model="sizeForm.resource" class="float-left mt-2" size="medium">
-                <el-radio label="Spending"></el-radio>
-                <el-radio label="Income"></el-radio>
+              <el-radio-group v-model="sizeForm.type">
+                <el-radio-button label="Spending" default-active></el-radio-button>
+                <el-radio-button label="Income"></el-radio-button>
               </el-radio-group>
             </el-form-item>
           </div>
-        </div>
-
-        <div class="row">
-          <div class="col">
-            <el-form-item label="Title">
-              <el-input v-model="sizeForm.name"></el-input>
+          <div>
+            <el-form-item prop="is_recurring">
+              <el-switch
+                  v-model="sizeForm.is_recurring"
+                  active-text="Recurring"
+                  inactive-text="Not recurring">
+              </el-switch>
             </el-form-item>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col">
-            <el-form-item label="Description" prop="desc">
-              <el-input type="textarea" v-model="sizeForm.desc"></el-input>
-            </el-form-item>
-          </div>
+        <div class="d-flex flex-column">
+          <el-form-item label="Title">
+            <el-input v-model="sizeForm.title"></el-input>
+          </el-form-item>
         </div>
 
-        <div class="row">
+        <div class="d-flex flex-column">
+          <el-form-item label="Amount">
+            <el-input placeholder="Enter amount" v-model="sizeForm.amount">
+              <template slot="append">$</template>
+            </el-input>
+          </el-form-item>
+        </div>
 
+        <div class="d-flex flex-column">
+          <el-form-item label="Description" prop="desc">
+            <el-input type="textarea" v-model="sizeForm.description"></el-input>
+          </el-form-item>
+        </div>
 
-
-            <el-form-item label="Choose your card" prop="card" class="col-lg-6">
-              <el-select v-model="sizeForm.region" placeholder="please select your card" class="ml-0">
-                <el-option label="Credit1" value="shanghai"></el-option>
-                <el-option label="Debit" value="beijing"></el-option>
+        <div class="d-flex">
+          <div class="mr-auto">
+            <el-form-item label="Choose your card" prop="card">
+              <el-select v-model="sizeForm.card" placeholder="Select card">
+                <el-option-group
+                    v-for="card in cards"
+                    :key="card.label"
+                    :label="card.label">
+                  <el-option
+                      v-for="item in card.types"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+                </el-option-group>
               </el-select>
             </el-form-item>
-
-
-
-
-            <el-form-item label="Date" class="col-lg-6">
-              <el-col :span="11" >
-                <el-date-picker type="date" placeholder="Pick a date" v-model="sizeForm.date1"></el-date-picker>
-              </el-col>
-            </el-form-item>
-
-
-        </div>
-
-
-        <div class="d-flex flex-row">
-
-          <div class="flex-column">
-
-            <el-form-item label="Choose your card" prop="card" class="">
-              <el-select v-model="sizeForm.region" placeholder="please select your card" class="ml-0">
-                <el-option label="Credit1" value="shanghai"></el-option>
-                <el-option label="Debit" value="beijing"></el-option>
-              </el-select>
-            </el-form-item>
-
           </div>
 
-          <div class="flex-column">
-            <el-form-item label="Date" class="align-items-end">
-              <el-col :span="11" >
-                <el-date-picker type="date" placeholder="Pick a date" v-model="sizeForm.date1" style="width: 100%;"></el-date-picker>
-              </el-col>
-            </el-form-item>
-          </div>
-
-        </div>
-
-        <div class="row">
-          <div class="col">
-            <el-form-item label="Is this payment recurring?" prop="is_recurring">
-              <el-switch v-model="sizeForm.delivery" class="float-left mt-3"></el-switch>
+          <div>
+            <el-form-item label="Date">
+              <el-date-picker
+                  v-model="sizeForm.date"
+                  type="date"
+                  placeholder="Pick a day">
+              </el-date-picker>
             </el-form-item>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col">
-            <el-form-item size="large">
-              <el-button type="primary" @click="onSubmit">Create</el-button>
-              <el-button @click="redirect">Cancel</el-button>
-            </el-form-item>
-          </div>
+        <div class="d-flex flex-column">
+          <el-form-item size="large">
+            <el-button type="primary" @click="onSubmit">Create</el-button>
+            <el-button @click="redirect">Cancel</el-button>
+          </el-form-item>
         </div>
+
       </el-form>
     </div>
   </div>
-
 
 </template>
 
 <script>
 import router from "@/router";
+import { mapActions } from "vuex";
 
 export default {
-name: "BudgetForm",
+  name: "BudgetForm",
   data() {
     return {
       sizeForm: {
-        name: '',
-        region: '',
-        date1: '',
-        date2: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: ''
-      }
+        title: '',
+        type: '',
+        date: '',
+        card: '',
+        description: '',
+        amount: '',
+        is_recurring: false,
+      },
+      cards: [{
+        label: "Credit",
+        types: [{
+          value: "Main credit",
+          label: "Main credit",
+        }]
+      },{
+          label: "Debit",
+          types: [{
+            value: "Main Debit",
+            label: "Main Debit",
+          }]
+        }
+      ]
     };
   },
   methods: {
-    onSubmit() {
+    ...mapActions(['addBudget']),
+    onSubmit(e) {
+      e.preventDefault();
+      this.addBudget(this.sizeForm);
       console.log('submit!');
+      this.sizeForm = '';
+      alert("Added successfully!");
+      router.go(-1);
     },
     redirect() {
       router.go(-1);
@@ -132,12 +138,14 @@ name: "BudgetForm",
 </script>
 
 <style scoped>
-.bg{
+.bg {
   background-color: #eeeeee;
   border-radius: 50px;
   border: 1px solid grey;
 }
-.w{
-  width:40%;
+
+.w {
+  width: 40%;
+
 }
 </style>

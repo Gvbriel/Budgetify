@@ -2,6 +2,7 @@
 
 namespace Modules\Budget\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -37,14 +38,15 @@ class BudgetController extends Controller
      */
     public function store(Request $request)
     {
+        //$card = Auth::user()->cards;
         $budget = Budget::create([
             'amount' => $request->amount,
             'title' => $request->title,
-            'date' => $request->date,
+            'date' => Carbon::parse($request->date)->toDateTimeString(),
             'description' => $request->description,
             'type' => $request->type,
             'is_recurring' => $request->is_recurring,
-            'user_id' => 1
+            'user_id' => 1,
         ]);
 
         return response()->json($budget);

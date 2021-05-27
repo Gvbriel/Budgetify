@@ -1,6 +1,13 @@
 import axios from 'axios'
+import moment from "moment";
 
 const url = 'http://api.budgetify.pl/api/budget'
+
+const formatDate = (value) => {
+    if(value){
+        return moment(String(value)).format('DD-MM-YYYY hh:mm:ss')
+    }
+}
 
 const state = {
     budget:[]
@@ -16,11 +23,19 @@ const actions = {
 
         console.log(response.data)
         commit('setBudget', response.data)
+    },
+    async addBudget({commit}, payload){
+        payload.date = formatDate(payload.date)
+        console.log(payload.date)
+        const response = await axios.post(url, payload)
+
+        commit('newBudget', response.data)
     }
 }
 
 const mutations = {
-    setBudget: (state, budget) => (state.budget = budget)
+    setBudget: (state, budget) => (state.budget = budget),
+    newBudget: (state, singlebudget) => state.budget.unshift(singlebudget)
 }
 
 export default {

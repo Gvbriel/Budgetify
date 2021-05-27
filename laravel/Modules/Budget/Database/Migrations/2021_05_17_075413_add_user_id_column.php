@@ -14,7 +14,8 @@ class AddUserIdColumn extends Migration
     public function up()
     {
         Schema::table('budgets', function (Blueprint $table) {
-            $table->foreignId('user_id');
+            $table->foreignId('user_id')->references('id')->on('users');
+            $table->foreignId('card_id')->references('id')->on('cards');
         });
     }
 

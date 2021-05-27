@@ -1,11 +1,11 @@
 <template>
   <div id="app">
     <div class="container mx-auto">
-      <router-link to="/">Home</router-link>
-      |
-      <router-link to="/about">About</router-link>
-      |
       <router-link to="/budget">Budget</router-link>
+      |
+      <router-link to="/login">Login</router-link>
+      |
+      <router-link to="/register">Register</router-link>
     </div>
     <div class="center">
       <router-view></router-view>

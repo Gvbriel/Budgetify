@@ -18,6 +18,7 @@ class CreateStockTable extends Migration
             $table->text('name');
             $table->double('amount');
             $table->double('paid');
+            $table->foreignId('user_id')->references('id')->on('users');
             $table->date('date')->nullable();
             $table->longtext('description')->nullable();
             $table->timestamps();

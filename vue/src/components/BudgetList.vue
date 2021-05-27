@@ -7,13 +7,15 @@
         </el-row>
         <el-table
             :data="allBudget"
-            style="width: 100%">
+            style="width: 100%"
+        >
           <el-table-column type="expand">
             <template slot-scope="props">
               <p>Amount: {{props.row.amount}}</p>
               <p>Description: {{ props.row.description }}</p>
               <p>{{props.row.is_recurring ? "This payment is recurring" : "This payment isn't recurring."}}</p>
-              <p>Date: {{ props.row.created_at }}</p>
+              <p>Date: {{ props.row.date }}</p>
+              <p>Created at: {{ props.row.created_at }}</p>
               <el-button
                   size="mini"
                   icon="el-icon-edit"
@@ -35,7 +37,9 @@
           </el-table-column>
           <el-table-column
               label="Amount"
-              prop="amount">
+              prop="amount"
+              cell-class-name="text-primary"
+          >
           </el-table-column>
           <el-table-column
               label="Card"
@@ -61,7 +65,12 @@ import {mapGetters, mapActions} from "vuex"
 export default {
   name: "BudgetList",
   methods: {
-    ...mapActions(['fetchBudget'])
+    ...mapActions(['fetchBudget']),
+    setStyle(type){
+      if(type.type === "Income"){
+        return 'text-primary'
+      }
+    }
   },
   computed: mapGetters(["allBudget"]),
   created() {

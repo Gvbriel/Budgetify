@@ -3,10 +3,12 @@ import App from './App.vue'
 import ElementUI from 'element-ui'
 import router from './router'
 import store from './store'
+import moment from 'moment'
 import './plugins/element.js'
 
 Vue.use(ElementUI)
 Vue.config.productionTip = false
+
 
 new Vue({
   router,

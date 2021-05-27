@@ -16,6 +16,7 @@ class BudgetResource extends JsonResource
             'is_recurring' => $this->isRecurring,
             'amount' => $this->amount,
             'type' => ucfirst($this->type),
+            'date' => $this->date,
             'created_at' => $this->created_at->format('d-m-Y H:i:s'),
             'updated_at' => $this->updated_at->format('d-m-Y H:i:s'),
         ];
