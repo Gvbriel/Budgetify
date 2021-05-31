@@ -10,7 +10,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/budget',
     name: 'Budget',
     component: MainWindow
   },
