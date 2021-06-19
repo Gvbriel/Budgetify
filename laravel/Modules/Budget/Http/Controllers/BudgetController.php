@@ -19,7 +19,7 @@ class BudgetController extends Controller
     public function index()
     {
         $budget = BudgetResource::collection(Budget::all());
-
+        dd(Auth::user());
         return response()->json($budget);
     }
 
@@ -70,7 +70,6 @@ class BudgetController extends Controller
      */
     public function edit($id)
     {
-
     }
 
     /**
