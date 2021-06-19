@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -21,5 +22,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('/login', [LoginController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
+Route::post('/register', [RegisterController::class, 'register']);
 Route::middleware('auth:api')->post('/logout', [AuthController::class, 'logout']);

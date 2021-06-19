@@ -4,7 +4,7 @@
 
       <div class="d-flex flex-column">
         <el-form-item label="Email">
-          <el-input v-model="loginForm.username"></el-input>
+          <el-input v-model="loginForm.email"></el-input>
         </el-form-item>
       </div>
 
@@ -31,18 +31,19 @@ name: "Login",
   data() {
     return {
       loginForm: {
-        username: '',
+        email: '',
         password: ''
       }
     };
   },
-  computed: mapGetters(['isAuthenticated']),
+  computed: {...mapGetters(['isAuthenticated'])},
   methods: {
     ...mapActions(['retrieveToken']),
   login() {
     this.retrieveToken(this.loginForm)
+    console.log(this.isAuthenticated)
     //TODO redirect after logging in and handle any errors
-    if(this.isAuthenticated())
+    if(this.isAuthenticated)
     {
       console.log('Authenticated!')
       router.push('/budget')

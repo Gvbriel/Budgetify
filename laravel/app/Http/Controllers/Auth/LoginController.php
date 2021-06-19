@@ -54,8 +54,7 @@ class LoginController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
-        $accessToken = User::where('email', $request->email)->first()->createToken('authToken')->accessToken;
-
+        $accessToken = User::where('email', $request->email)->first()->createToken('Laravel Password Grant Client')->accessToken;
         return response()->json(['user' => $user, 'access_token' => $accessToken]);
     }
 }

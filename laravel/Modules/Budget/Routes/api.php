@@ -17,14 +17,10 @@ use Modules\Budget\Http\Controllers\CardController;
 |
 */
 
-Route::get('/budget', function (){
-    $x = [1,2,3,5];
-    return response()->json($x);
-});
-
 Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 });
+
 Route::middleware('auth:api')->get('/authorized',function (){
     dd('Authorized!');
 });
@@ -33,5 +29,6 @@ Route::middleware('auth:api')->get('/authorized',function (){
 
 Route::namespace('\\')->middleware('auth:api')->group(function(){
     Route::resource('budget', BudgetController::class);
+
     Route::resource('card', CardController::class);
 });
