@@ -1,34 +1,37 @@
-import axios from 'axios'
+import axios from "axios";
 
-const url = 'http://api.budgetify.pl/api'
+const url = "http://api.budgetify.com/api";
 
 const state = {
-    token: localStorage.getItem('access_token') || null,
-    isAuthenticated: localStorage.getItem('access_token') !== null
-}
+  token: localStorage.getItem("access_token") || null,
+  isAuthenticated: localStorage.getItem("access_token") !== null,
+};
 
 const getters = {
-    isAuthenticated: state => state.isAuthenticated
-}
+  isAuthenticated: (state) => state.isAuthenticated,
+};
 
 const actions = {
-    async retrieveToken({commit}, payload){
-       console.log(payload)
-        const response = axios.post(url + '/login', payload)
-            .then(response => {
-                const token = response.data.access_token
+  async retrieveToken({ commit }, payload) {
+    console.log(payload);
+    const response = axios.post(url + "/login", payload).then((response) => {
+      const token = response.data.access_token;
+      console.log(response.data);
 
-                localStorage.setItem('access_token', token)
+      localStorage.setItem("access_token", token);
 
-                commit('setToken', token)
-            })
-    }
-}
+      commit("setToken", token);
+    });
+  },
+};
 
 const mutations = {
-    setToken: (token) => state.token = token
-}
+  setToken: (token) => (state.token = token),
+};
 
 export default {
-    state, getters, actions, mutations
-}
+  state,
+  getters,
+  actions,
+  mutations,
+};
