@@ -1,16 +1,7 @@
 import axios from "axios";
 import moment from "moment";
 
-const url = "http://api.budgetify.com/api/budget";
-
-const token = localStorage.getItem("access_token");
-
-const header = {
-  headers: {
-    Authorization: `Bearer ${token}`,
-    withCredentials: true,
-  },
-};
+const url = "http://api.budgetify.pl/api/budget";
 
 const formatDate = (value) => {
   if (value) {
@@ -21,18 +12,26 @@ const formatDate = (value) => {
 const state = {
   budget: [],
   token: localStorage.getItem("access_token") || null,
+  header: {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("access_token") || null}`,
+      withCredentials: true,
+      "Access-Control-Allow-Origin": "*"
+    },
+  }
 };
+
 
 const getters = {
   allBudget: (state) => state.budget,
-  getToken: (state) => state.token,
+  getHeader: (state) => state.header,
 };
 
 const actions = {
-  async fetchBudget({ commit }) {
-    const response = await axios.get(url, header);
+  async fetchBudget({ commit, state }) {
+    const response = await axios.get(url, state.header);
 
-    console.log(token);
+    console.log(state.header);
     commit("setBudget", response.data);
   },
   async addBudget({ commit }, payload) {
