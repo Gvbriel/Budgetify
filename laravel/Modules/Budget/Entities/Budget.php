@@ -3,12 +3,15 @@
 namespace Modules\Budget\Entities;
 
 use App\Models\User;
+use Modules\Budget\Entities\Card;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Budget extends Model
 {
     use HasFactory;
+    use SoftDeletes;
 
     protected $fillable = [
         'amount',
@@ -17,7 +20,8 @@ class Budget extends Model
         'description',
         'title',
         'is_recurring',
-        'user_id'
+        'user_id',
+        'card_id'
     ];
 
     public function card()

@@ -1,7 +1,7 @@
 import axios from "axios";
 import moment from "moment";
 
-const url = "http://api.budgetify.pl/api/budget";
+const url = "http://api.budgetify.com/api/budget";
 
 const formatDate = (value) => {
   if (value) {
@@ -16,11 +16,10 @@ const state = {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("access_token") || null}`,
       withCredentials: true,
-      "Access-Control-Allow-Origin": "*"
+      "Access-Control-Allow-Origin": "*",
     },
-  }
+  },
 };
-
 
 const getters = {
   allBudget: (state) => state.budget,
@@ -37,7 +36,7 @@ const actions = {
   async addBudget({ commit }, payload) {
     payload.date = formatDate(payload.date);
     console.log(payload.date);
-    const response = await axios.post(url, payload);
+    const response = await axios.post(url, payload, state.header);
 
     commit("newBudget", response.data);
   },

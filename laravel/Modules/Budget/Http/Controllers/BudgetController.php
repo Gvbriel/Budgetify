@@ -3,12 +3,14 @@
 namespace Modules\Budget\Http\Controllers;
 
 use Carbon\Carbon;
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
-use Illuminate\Support\Facades\Auth;
 use Modules\Budget\Entities\Budget;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Support\Renderable;
 use Modules\Budget\Transformers\BudgetResource;
+use Modules\Budget\Http\Requests\StoreBudgetRequest;
+use Modules\Budget\Http\Requests\UpdateBudgetRequest;
 
 class BudgetController extends Controller
 {
@@ -37,7 +39,7 @@ class BudgetController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(StoreBudgetRequest $request)
     {
         //$card = Auth::user()->cards;
         $budget = Budget::create([
@@ -47,7 +49,8 @@ class BudgetController extends Controller
             'description' => $request->description,
             'type' => $request->type,
             'is_recurring' => $request->is_recurring,
-            'user_id' => 1,
+            'user_id' => Auth::user()->id,
+            'card_id' => 1
         ]);
 
         return response()->json($budget);
@@ -78,9 +81,21 @@ class BudgetController extends Controller
      * @param int $id
      * @return Renderable
      */
-    public function update(Request $request, $id)
+    public function update(UpdateBudgetRequest $request, $id)
     {
-        //
+
+        $budget = Budget::find($id);
+        $budget->amount = $request->amount;
+        $budget->title = $request->title;
+        $budget->date = $request->date;
+        $budget->description = $request->description;
+        $budget->type = $request->type;
+        $budget->is_recurring = $request->is_recurring;
+        $budget->user_id = $request->user_id;
+        $budget->card_id = $request->card_id;
+        $budget->save();
+
+        return response()->json($budget);
     }
 
     /**

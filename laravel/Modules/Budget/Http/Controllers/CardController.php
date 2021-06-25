@@ -2,10 +2,12 @@
 
 namespace Modules\Budget\Http\Controllers;
 
-use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Modules\Budget\Entities\Card;
+use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Support\Renderable;
+
 
 class CardController extends Controller
 {
@@ -15,7 +17,7 @@ class CardController extends Controller
      */
     public function index()
     {
-        $cards = Card::get();
+        $cards = Auth::user()->cards;
 
         return response()->json($cards);
     }
