@@ -21,14 +21,13 @@ Route::group(['middleware' => ['cors', 'json.response']], function () {
 
 });
 
-Route::middleware('auth:api')->get('/authorized',function (){
+Route::middleware('auth:api')->get('/authorized', function () {
     dd('Authorized!');
 });
 
 
-
-Route::namespace('\\')->middleware('auth:api')->group(function(){
+Route::namespace('\\')->middleware('auth:api')->group(function () {
+    Route::get('/images', [CardController::class, 'getImages']);
     Route::resource('budget', BudgetController::class);
-
     Route::resource('card', CardController::class);
 });

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const url = "http://api.budgetify.com/api";
+const url = "http://api.budgetifly.com/api";
 
 const state = {
   token: localStorage.getItem("access_token") || null,

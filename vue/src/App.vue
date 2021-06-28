@@ -1,13 +1,15 @@
 <template>
   <div id="app">
-    <div class="container mx-auto">
+    <div class="container">
       <router-link to="/budget">Budget</router-link>
+      |
+      <router-link to="/cards">Cards</router-link>
       |
       <router-link to="/login">Login</router-link>
       |
       <router-link to="/register">Register</router-link>
     </div>
-    <div class="center">
+    <div class="margin">
       <router-view></router-view>
     </div>
   </div>
@@ -24,6 +26,11 @@ export default {
 
 <style>
 @import '~bootstrap/dist/css/bootstrap.css';
+
+
+.margin {
+  margin-top: 5%;
+}
 
 .center {
   display: flex;

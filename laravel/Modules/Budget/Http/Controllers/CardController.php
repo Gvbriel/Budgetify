@@ -7,19 +7,31 @@ use Modules\Budget\Entities\Card;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Budget\Entities\Image;
+use Modules\Budget\Transformers\CardResource;
 
 
 class CardController extends Controller
 {
+    public function getImages()
+    {
+        $images = Image::all();
+
+        return response()->json($images);
+    }
+
     /**
      * Display a listing of the resource.
      * @return Renderable
      */
     public function index()
     {
-        $cards = Auth::user()->cards;
-
-        return response()->json($cards);
+        try {
+            $cards = CardResource::collection(Card::where('owner_id', Auth::user()->id)->get());
+            return response()->json($cards);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return $ex->getMessage();
+        }
     }
 
     /**
@@ -43,7 +55,7 @@ class CardController extends Controller
             'number' => $request->number,
             'type' => $request->type,
             'balance' => $request->balance,
-            'owner_id' => 1,
+            'owner_id' => Auth::user()->id,
         ]);
 
         return response()->json($card);

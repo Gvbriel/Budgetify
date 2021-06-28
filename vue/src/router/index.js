@@ -5,6 +5,8 @@ import MainWindow from "@/views/MainWindow";
 import BudgetForm from "@/components/BudgetForm";
 import Login from "@/views/user/Login";
 import Register from "@/views/user/Register";
+import CardsList from "@/components/CardsList";
+import CardForm from "@/components/CardForm";
 
 Vue.use(VueRouter)
 
@@ -28,6 +30,16 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: Register
+  },
+  {
+    path: '/cards',
+    name: 'Cards',
+    component: CardsList
+  },
+  {
+    path: '/cards/add',
+    name: 'CardsAdd',
+    component: CardForm
   },
 ]
 

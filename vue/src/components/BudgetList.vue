@@ -2,8 +2,12 @@
     <div class="container">
         <el-row>
           <router-link to="/budget/add">
-            <el-button class="float-right" :loading="false" round>Add new</el-button>
+            <el-button class="float-right" :loading="false" round>Add new budget</el-button>
           </router-link>
+          <router-link to="/cards">
+          <el-button class="float-left mr-2" :loading="false" round>Add new card</el-button>
+          </router-link>
+
         </el-row>
         <el-table
             :data="allBudget"

@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Card extends Model
 {
     use HasFactory;
-    use SoftDeletes;
+
+//    use SoftDeletes;
 
     protected $table = "cards";
 
@@ -26,6 +27,11 @@ class Card extends Model
     public function owner()
     {
         return $this->hasOne(User::class, 'id', 'owner_id');
+    }
+
+    public function image()
+    {
+        return $this->hasOne(Image::class, 'id', 'image_id');
     }
 
     public function calculateBalance()

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 let config = {
-  baseURL: "http://api.budgetify.com/api",
+  baseURL: "http://api.budgetifly.com/api",
   headers: {
     Authorization: `Bearer ${localStorage.getItem("access_token") || null}`,
     withCredentials: true,

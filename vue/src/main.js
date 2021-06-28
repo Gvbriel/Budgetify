@@ -6,21 +6,21 @@ import router from "./router";
 import store from "./store";
 import moment from "moment";
 import "./plugins/element.js";
+import vSelect from "vue-select";
+import 'vue-select/dist/vue-select.css';
 
+Vue.component('v-select', vSelect);
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
 
-axios.defaults = {
-  baseURL: "http://api.budgetify.com/api",
-  headers: {
+axios.defaults.headers.common = {
     Authorization: `Bearer ${localStorage.getItem("access_token") || null}`,
     withCredentials: true,
     "Access-Control-Allow-Origin": "*",
-  },
-};
+}
 
 new Vue({
-  router,
-  store,
-  render: (h) => h(App),
+    router,
+    store,
+    render: (h) => h(App),
 }).$mount("#app");
