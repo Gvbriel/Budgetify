@@ -21,7 +21,9 @@ class Card extends Model
         'number',
         'type',
         'balance',
-        'owner_id'
+        'owner_id',
+        'image_id',
+        'initial_balance'
     ];
 
     public function owner()
@@ -36,8 +38,8 @@ class Card extends Model
 
     public function calculateBalance()
     {
-        $balance = $this->balance;
-        $budgets = Budget::where('user_id', $this->owner_id)->get();
+        $balance = 0 + $this->initial_balance;
+        $budgets = Budget::where('user_id', $this->owner_id)->where('card_id', $this->id)->get();
         foreach ($budgets as $budget) {
             if ($budget->type == 'Income') {
                 $balance += $budget->amount;
@@ -47,6 +49,23 @@ class Card extends Model
         }
         $this->balance = $balance;
         $this->save();
-        return $this->balance;
     }
+
+    public function setCardBalanceAttribute()
+    {
+        $balance = 0 + $this->initial_balance;
+        $budgets = Budget::where('user_id', $this->owner_id)->where('card_id', $this->id)->get();
+        foreach ($budgets as $budget) {
+            if ($budget->type == 'Income') {
+                $balance += $budget->amount;
+            } else {
+                $balance -= $budget->amount;
+            }
+        }
+        $this->balance = $balance;
+        $this->save();
+
+        return $balance;
+    }
+
 }

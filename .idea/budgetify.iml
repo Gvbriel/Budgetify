@@ -119,10 +119,10 @@
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/phpseclib/phpseclib" />
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/psr/http-factory" />
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/nyholm/psr7" />
-      <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/lcobucci/clock" />
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/lcobucci/jwt" />
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/defuse/php-encryption" />
       <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/laravel/ui" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel/vendor/lcobucci/clock" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

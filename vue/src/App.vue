@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <div class="container">
+    <div class="container-fluid">
       <router-link to="/budget">Budget</router-link>
       |
       <router-link to="/cards">Cards</router-link>

@@ -28,6 +28,7 @@ Route::middleware('auth:api')->get('/authorized', function () {
 
 Route::namespace('\\')->middleware('auth:api')->group(function () {
     Route::get('/images', [CardController::class, 'getImages']);
+    Route::get('/cards/sorted', [CardController::class, 'sortedCards']);
     Route::resource('budget', BudgetController::class);
-    Route::resource('card', CardController::class);
+    Route::resource('cards', CardController::class);
 });

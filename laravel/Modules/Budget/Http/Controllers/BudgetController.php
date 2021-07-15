@@ -41,7 +41,7 @@ class BudgetController extends Controller
             'type' => $request->type,
             'is_recurring' => $request->is_recurring,
             'user_id' => Auth::user()->id,
-            'card_id' => 1
+            'card_id' => $request->card_id,
         ]);
 
         return response()->json($budget);
@@ -67,7 +67,6 @@ class BudgetController extends Controller
      */
     public function update(UpdateBudgetRequest $request, $id)
     {
-
         $budget = Budget::find($id);
         $budget->amount = $request->amount;
         $budget->title = $request->title;
@@ -75,7 +74,6 @@ class BudgetController extends Controller
         $budget->description = $request->description;
         $budget->type = $request->type;
         $budget->is_recurring = $request->is_recurring;
-        $budget->user_id = $request->user_id;
         $budget->card_id = $request->card_id;
         $budget->save();
 
@@ -89,6 +87,8 @@ class BudgetController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Budget::find($id)->delete();
+
+        return true;
     }
 }

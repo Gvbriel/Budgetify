@@ -42,19 +42,16 @@
         </div>
 
       </div>
-
-      <v-select :options="images" v-model="cardForm.image_id"
+      <v-select :options="images" class="style-chooser" v-model="cardForm.image_id"
                 :getOptionLabel="image => image.name">
         <template slot="option" slot-scope="image">
           <img @click="onChange(image)" style="height: 100px;" :src="image.url" :value="image.id" :label="image.name"/>
           {{ image.name }}
         </template>
       </v-select>
-
     </div>
 
-
-    <div class="justify-content-center">
+    <div class="justify-content-center mt-2">
       <el-form-item size="medium">
         <el-button type="primary" @click="onSubmit">Create</el-button>
         <el-button @click="clearForm">Clear</el-button>
@@ -87,8 +84,10 @@ export default {
     onSubmit(e) {
       e.preventDefault();
       this.cardForm.image_id = this.cardForm.image_id.id
+      this.cardForm.balance = parseFloat(this.cardForm.balance)
       console.log(this.cardForm);
-      //this.addCard(this.cardForm);
+      this.addCard(this.cardForm).then(() => console.log("done")
+      );
     },
     clearForm(e) {
       console.log(this.cardForm);
@@ -107,5 +106,18 @@ export default {
 </script>
 
 <style scoped>
+.style-chooser .vs__search::placeholder,
+.style-chooser .vs__dropdown-toggle,
+.style-chooser .vs__dropdown-menu {
+  background: #dfe5fb;
+  border: none;
+  color: #394066;
+  text-transform: lowercase;
+  font-variant: small-caps;
+}
 
+.style-chooser .vs__clear,
+.style-chooser .vs__open-indicator {
+  fill: #394066;
+}
 </style>

@@ -1,19 +1,21 @@
 <template>
-  <div class="container-fluid">
-    <div class="w mx-auto">
+  <div class="container-fluid w-50 p-0">
 
-      <el-form ref="form" :model="sizeForm" @submit="onSubmit" label-width="120px" size="mini">
+    <el-form ref="form" :model="sizeForm" @submit="onSubmit" size="mini">
 
-        <div class="d-flex">
-          <div class="mr-auto">
-            <el-form-item label="Type">
+      <div class="m-0 p-0 mx-auto justify-content-center">
+        <div class="row">
+
+          <div class="col-xl-6 col-12 text-xl-left">
+            <el-form-item>
               <el-radio-group v-model="sizeForm.type">
                 <el-radio-button label="Spending" default-active></el-radio-button>
                 <el-radio-button label="Income"></el-radio-button>
               </el-radio-group>
             </el-form-item>
           </div>
-          <div>
+
+          <div class="col-xl-6 col-12">
             <el-form-item prop="is_recurring">
               <el-switch
                   v-model="sizeForm.is_recurring"
@@ -24,32 +26,45 @@
           </div>
         </div>
 
-        <div class="d-flex flex-column">
-          <el-form-item label="Title">
-            <el-input v-model="sizeForm.title"></el-input>
-          </el-form-item>
+        <div class="row">
+          <div class="col">
+            <el-form-item>
+              <el-input placeholder="E.g. Shopping" v-model="sizeForm.title">
+                <template slot="prepend">Title:</template>
+              </el-input>
+            </el-form-item>
+          </div>
         </div>
 
-        <div class="d-flex flex-column">
-          <el-form-item label="Amount">
-            <el-input placeholder="Enter amount" v-model="sizeForm.amount">
-              <template slot="append">$</template>
-            </el-input>
-          </el-form-item>
+        <div class="row">
+          <div class="col">
+            <el-form-item>
+              <el-input placeholder="E.g. 100" v-model="sizeForm.amount">
+                <template slot="append">$</template>
+              </el-input>
+            </el-form-item>
+          </div>
         </div>
 
-        <div class="d-flex flex-column">
-          <el-form-item label="Description" prop="desc">
-            <el-input type="textarea" v-model="sizeForm.description"></el-input>
-          </el-form-item>
+        <div class="row">
+
+          <div class="col">
+            <el-form-item prop="desc">
+              <el-input placeholder="E.g. shopping in Walmart for cereal" v-model="sizeForm.description">
+                <template slot="prepend">Description</template>
+              </el-input>
+            </el-form-item>
+          </div>
+
         </div>
 
-        <div class="d-flex">
-          <div class="mr-auto">
-            <el-form-item label="Choose your card" prop="card">
-              <el-select v-model="sizeForm.card" placeholder="Select card">
+        <div class="row">
+
+          <div class="col-lg col-12">
+            <el-form-item prop="card">
+              <el-select v-model="sizeForm.card_id" placeholder="Select card">
                 <el-option-group
-                    v-for="card in cards"
+                    v-for="card in allSortedCards"
                     :key="card.label"
                     :label="card.label">
                   <el-option
@@ -63,8 +78,8 @@
             </el-form-item>
           </div>
 
-          <div>
-            <el-form-item label="Date">
+          <div class="col-lg col-12">
+            <el-form-item>
               <el-date-picker
                   v-model="sizeForm.date"
                   type="date"
@@ -72,24 +87,25 @@
               </el-date-picker>
             </el-form-item>
           </div>
+
         </div>
 
-        <div class="d-flex flex-column">
-          <el-form-item size="large">
+        <div class="col-12">
+          <el-form-item size="medium">
             <el-button type="primary" @click="onSubmit">Create</el-button>
             <el-button @click="redirect">Cancel</el-button>
           </el-form-item>
         </div>
-
-      </el-form>
-    </div>
+      </div>
+    </el-form>
   </div>
+
 
 </template>
 
 <script>
 import router from "@/router";
-import { mapActions } from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "BudgetForm",
@@ -99,7 +115,7 @@ export default {
         title: '',
         type: '',
         date: '',
-        card: '',
+        card_id: '',
         description: '',
         amount: '',
         is_recurring: false,
@@ -110,20 +126,25 @@ export default {
           value: "Main credit",
           label: "Main credit",
         }]
-      },{
-          label: "Debit",
-          types: [{
-            value: "Main Debit",
-            label: "Main Debit",
-          }]
-        }
+      }, {
+        label: "Debit",
+        types: [{
+          value: "Main Debit",
+          label: "Main Debit",
+        }]
+      }
       ]
     };
   },
+  computed: mapGetters(["allSortedCards"]),
+  created() {
+    this.fetchSortedCards()
+  },
   methods: {
-    ...mapActions(['addBudget']),
+    ...mapActions(['addBudget', 'fetchSortedCards']),
     onSubmit(e) {
       e.preventDefault();
+      console.log(this.sizeForm)
       this.addBudget(this.sizeForm);
       console.log('submit!');
       this.sizeForm = '';
@@ -133,6 +154,7 @@ export default {
     redirect() {
       router.go(-1);
     }
+
   }
 }
 </script>
@@ -145,7 +167,7 @@ export default {
 }
 
 .w {
-  width: 40%;
+  width: 60%;
 
 }
 </style>

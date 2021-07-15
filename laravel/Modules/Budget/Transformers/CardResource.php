@@ -10,10 +10,12 @@ class CardResource extends JsonResource
 {
     public function toArray($request)
     {
+//        $this->calculateBalance();
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'balance' => $this->calculateBalance(),
+            'number' => $this->number,
+            'balance' => $this->setCardBalanceAttribute(),
             'type' => ucfirst($this->type),
             'image' => $this->image->url,
         ];

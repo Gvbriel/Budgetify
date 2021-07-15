@@ -3,6 +3,7 @@
 namespace Modules\Budget\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Modules\Budget\Entities\Budget;
 use Modules\Budget\Entities\Card;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,31 @@ use Modules\Budget\Transformers\CardResource;
 
 class CardController extends Controller
 {
+    public function sortedCards()
+    {
+//        $c = Card::all();
+//        $ca = $c->where('owner_id', Auth::user()->id);
+
+        $cards = Card::where('owner_id', Auth::user()->id)->get()->groupBy('type')->toArray();
+        $types = array_unique(Card::all()->pluck('type')->toArray());
+
+        $return = [];
+        foreach ($types as $type) {
+            $cards[$type] = array_map(function ($card) {
+                return array(
+                    'id' => $card['id'],
+                    'value' => $card['id'],
+                    'label' => $card['name'],
+                );
+            }, $cards[$type]);
+
+            $return[] = [
+                'label' => $type,
+                'types' => $cards[$type]];
+        }
+        return response()->json($return);
+    }
+
     public function getImages()
     {
         $images = Image::all();
@@ -54,8 +80,10 @@ class CardController extends Controller
             'name' => $request->name,
             'number' => $request->number,
             'type' => $request->type,
-            'balance' => $request->balance,
+            'balance' => 0,
+            'initial_balance' => (double)$request->balance,
             'owner_id' => Auth::user()->id,
+            'image_id' => $request->image_id
         ]);
 
         return response()->json($card);
@@ -68,7 +96,7 @@ class CardController extends Controller
      */
     public function show($id)
     {
-        return view('budget::show');
+        return response()->json(Card::find($id));
     }
 
     /**
@@ -103,6 +131,16 @@ class CardController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if (Card::find($id)) {
+            $budgets = Budget::where('card_id', $id)->get();
+
+            foreach ($budgets as $budget) {
+                $budget->card_id = 0;
+                $budget->save();
+            }
+            Card::find($id)->delete();
+        }
+
+        return true;
     }
 }
