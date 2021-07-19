@@ -83,7 +83,7 @@ class CardController extends Controller
             'balance' => 0,
             'initial_balance' => (double)$request->balance,
             'owner_id' => Auth::user()->id,
-            'image_id' => $request->image_id
+            'image_id' => $request->image_id ? 0 : $request->image_id,
         ]);
 
         return response()->json($card);

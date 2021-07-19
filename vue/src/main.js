@@ -13,9 +13,14 @@ Vue.component('v-select', vSelect);
 Vue.use(ElementUI);
 Vue.config.productionTip = false;
 
+// Vue.prototype.$url = "http://api.budgetify.com";
+
+axios.defaults.baseURL = 'http://api.budgetify.com/api';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
+
 axios.defaults.headers.common = {
     Authorization: `Bearer ${localStorage.getItem("access_token") || null}`,
-    withCredentials: true,
+    //withCredentials: true,
     "Access-Control-Allow-Origin": "*",
 }
 

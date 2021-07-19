@@ -22,26 +22,26 @@ const getters = {
 
 const actions = {
     async fetchBudget({commit, state}) {
-        const response = await axios.get(url);
+        const response = await axios.get('/budget');
 
         commit("setBudget", response.data);
     },
     async addBudget({commit}, payload) {
         payload.date = formatDate(payload.date);
         console.log(payload.date);
-        const response = await axios.post(url, payload);
+        const response = await axios.post('/budget', payload);
 
         commit("newBudget", response.data);
     },
     async updateBudget({commit}, payload) {
-        const response = await axios.put(url + `/${payload.id}`, payload).then((response) => {
+        const response = await axios.put('/budget' + `/${payload.id}`, payload).then((response) => {
             commit("updateBudget", response.data);
             console.log(response);
             window.location.reload();
         });
     },
     async deleteBudget({commit}, id) {
-        const response = await axios.delete(url + `/${id}`).then(() => {
+        const response = await axios.delete('/budget' + `/${id}`).then(() => {
             commit('deleteBudget', id)
         })
     }

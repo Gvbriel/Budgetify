@@ -19,6 +19,7 @@ class BudgetResource extends JsonResource
             'date' => $this->date,
             'card' => $this->card ? new CardResource($this->card) : 0,
             'card_id' => $this->card_id,
+            'user_id' => $this->user_id,
             'created_at' => $this->created_at->format('d-m-Y H:i:s'),
             'updated_at' => $this->updated_at->format('d-m-Y H:i:s'),
         ];

@@ -24,27 +24,27 @@ const getters = {
 
 const actions = {
     async fetchCards({commit, state}) {
-        const response = await axios.get(url);
+        const response = await axios.get('/cards');
 
         console.log(response.data);
         commit("setCards", response.data);
     },
     async addCard({commit}, payload) {
-        const response = await axios.post(url, payload);
+        const response = await axios.post('/cards', payload);
         commit("newCard", response.data);
     },
     async fetchSortedCards({commit}) {
-        const response = await axios.get(url + '/sorted');
+        const response = await axios.get('/cards/sorted');
         console.log(response.data);
         commit("setSortedCards", response.data);
     },
     async deleteCard({commit}, id) {
-        const response = await axios.delete(url + `/${id}`).then(() => {
+        const response = await axios.delete('/cards' + `/${id}`).then(() => {
             commit("deleteBudget", id);
         });
     },
     async fetchImages({commit}) {
-        const response = await axios.get(urlImage);
+        const response = await axios.get('/images');
         console.log(response.data);
         commit("setImages", response.data);
     }

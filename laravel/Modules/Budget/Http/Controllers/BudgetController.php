@@ -20,7 +20,7 @@ class BudgetController extends Controller
      */
     public function index()
     {
-        $budget = BudgetResource::collection(Budget::all());
+        $budget = BudgetResource::collection(Budget::where('user_id', Auth::user()->id)->get());
 
         return response()->json($budget);
     }

@@ -75,7 +75,7 @@ export default {
         type: '',
         balance: '',
         number: '',
-        image_id: ''
+        image_id: false
       },
     };
   },

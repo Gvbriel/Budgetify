@@ -21,18 +21,26 @@
 
       <div class="d-flex flex-column">
         <el-form-item label="Password">
-          <el-input v-model="registerForm.password"></el-input>
+          <el-input type="password" v-model="registerForm.password"></el-input>
+        </el-form-item>
+      </div>
+
+      <div class="d-flex flex-column">
+        <el-form-item label="Confirm password">
+          <el-input type="password" v-model="registerForm.password_confirmation"></el-input>
         </el-form-item>
       </div>
 
       <div class="d-flex flex-row-reverse">
-        <el-button type="primary" @click="login('ruleForm')">Login</el-button>
+        <el-button type="primary" @click="handleRegister(registerForm)">Register</el-button>
       </div>
     </el-form>
   </div>
 </template>
 
 <script>
+import {mapActions} from "vuex";
+
 export default {
   name: "Register",
   data() {
@@ -42,10 +50,19 @@ export default {
         surname: "",
         email: "",
         password: "",
+        password_confirmation: "",
       },
     };
   },
+  methods: {
+    ...mapActions(['register']),
+    handleRegister(form){
+      this.register(form);
+    }
+  }
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>
