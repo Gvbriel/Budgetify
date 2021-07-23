@@ -21,7 +21,8 @@ class Budget extends Model
         'title',
         'is_recurring',
         'user_id',
-        'card_id'
+        'card_id',
+        'category_id'
     ];
 
     public function card()
@@ -32,5 +33,10 @@ class Budget extends Model
     public function user()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function category()
+    {
+        return $this->hasOne(Category::class, 'id', 'category_id');
     }
 }

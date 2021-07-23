@@ -1,13 +1,23 @@
 <template>
   <div id="app">
     <div class="container-fluid">
-      <router-link to="/budget">Budget</router-link>
-      |
-      <router-link to="/cards">Cards</router-link>
-      |
-      <router-link to="/login">Login</router-link>
-      |
-      <router-link to="/register">Register</router-link>
+      <template v-if="checkAuth()">
+        <router-link to="/" class="mr-4">Hello {{ name }}!</router-link>
+        <router-link to="/budget">Budget</router-link>
+        |
+        <router-link to="/cards">Cards</router-link>
+        |
+      </template>
+      <template v-if="!checkAuth()">
+        <router-link to="/login">Login</router-link>
+        |
+        <router-link to="/register">Register</router-link>
+      </template>
+      <template v-else>
+        <a @click="logout()">
+          <router-link to="/">Logout</router-link>
+        </a>
+      </template>
     </div>
     <div class="margin">
       <router-view></router-view>
@@ -16,11 +26,32 @@
 </template>
 
 <script>
-
+import {mapGetters} from "vuex";
 
 export default {
   name: 'app',
-  components: {}
+  components: {},
+  methods: {
+    ...mapGetters(['isAuthenticated']),
+    checkAuth() {
+      if (this.isAuthenticated())
+        return true
+      else
+        return false
+    },
+    logout() {
+      localStorage.clear()
+      window.location.reload();
+    }
+  },
+  mounted() {
+    this.checkAuth()
+  },
+  data() {
+    return {
+      name: localStorage.getItem('name')
+    }
+  }
 }
 </script>
 

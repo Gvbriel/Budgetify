@@ -15,7 +15,7 @@ Vue.config.productionTip = false;
 
 // Vue.prototype.$url = "http://api.budgetify.com";
 
-axios.defaults.baseURL = 'http://api.budgetify.com/api';
+axios.defaults.baseURL = 'http://api.budgetifly.com/api';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 axios.defaults.headers.common = {

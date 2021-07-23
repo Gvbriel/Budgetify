@@ -7,6 +7,7 @@ import Login from "@/views/user/Login";
 import Register from "@/views/user/Register";
 import CardsList from "@/components/CardsList";
 import CardForm from "@/components/CardForm";
+import Dashboard from "../components/Dashboard";
 
 Vue.use(VueRouter)
 
@@ -40,6 +41,11 @@ const routes = [
     path: '/cards/add',
     name: 'CardsAdd',
     component: CardForm
+  },
+  {
+    path: '/',
+    name: 'Dashboard',
+    component: Dashboard
   },
 ]
 

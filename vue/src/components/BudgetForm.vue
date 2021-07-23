@@ -58,11 +58,29 @@
 
         </div>
 
-        <div class="row">
+        <div class="row justify-content-between">
 
           <div class="col-lg col-12">
             <el-form-item prop="card">
               <el-select v-model="sizeForm.card_id" placeholder="Select card">
+                <el-option-group
+                    v-for="card in allSortedCards"
+                    :key="card.label"
+                    :label="card.label">
+                  <el-option
+                      v-for="item in card.types"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value">
+                  </el-option>
+                </el-option-group>
+              </el-select>
+            </el-form-item>
+          </div>
+
+          <div class="col-lg col-12">
+            <el-form-item prop="category">
+              <el-select v-model="sizeForm.category_id" placeholder="Select category">
                 <el-option-group
                     v-for="card in allSortedCards"
                     :key="card.label"
@@ -118,6 +136,7 @@ export default {
         card_id: '',
         description: '',
         amount: '',
+        category_id: '',
         is_recurring: false,
       },
       cards: [{

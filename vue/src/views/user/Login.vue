@@ -1,10 +1,10 @@
 <template>
   <div class="container-fluid w-50">
     <el-form
-      label-width="100px"
-      :model="loginForm"
-      action="#"
-      @submit.prevent="login"
+        label-width="100px"
+        :model="loginForm"
+        action="#"
+        @submit.prevent="login"
     >
       <div class="d-flex flex-column">
         <el-form-item label="Email">
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import router from "@/router";
 
 export default {
@@ -39,14 +39,14 @@ export default {
       },
     };
   },
-  computed: { ...mapGetters(["isAuthenticated"]) },
+  computed: {...mapGetters(["isAuthenticated"])},
   methods: {
     ...mapActions(["retrieveToken"]),
     login() {
       this.retrieveToken(this.loginForm);
-      console.log(this.isAuthenticated);
+      console.log(this.isAuthenticated());
       //TODO redirect after logging in and handle any errors
-      if (this.isAuthenticated) {
+      if (this.isAuthenticated()) {
         console.log("Authenticated!");
         router.push("/budget");
       } else {

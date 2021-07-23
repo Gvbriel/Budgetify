@@ -13,6 +13,7 @@ class BudgetResource extends JsonResource
             'id' => $this->id,
             'title' => ucfirst($this->title),
             'description' => $this->description,
+            'category' => $this->category->name,
             'is_recurring' => $this->is_recurring,
             'amount' => $this->amount,
             'type' => ucfirst($this->type),

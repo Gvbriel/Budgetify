@@ -20,6 +20,9 @@
         <template slot-scope="props">
           <div class="">
             <div class="row justify-content-around">
+              <h1>{{ props.row.category }}</h1>
+            </div>
+            <div class="row justify-content-around">
               <div class="col-md-6 col-12 text-center">
                 <p>
                   {{ props.row.is_recurring ? "This payment is recurring" : "This payment isn't recurring." }}</p>
@@ -163,8 +166,13 @@
 
       </el-table-column>
       <el-table-column
-          label="title"
+          label="Title"
           prop="title">
+      </el-table-column>
+      <el-table-column
+          label="Category"
+          prop="category"
+      >
       </el-table-column>
       <el-table-column
           label="Type"
