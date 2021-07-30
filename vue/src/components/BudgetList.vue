@@ -1,12 +1,37 @@
 <template>
   <div class="container">
     <el-row>
-      <router-link to="/budget/add">
+      <router-link :to="{ name: 'BudgetAdd', params: {type: 'Create'}}">
         <el-button class="float-right" :loading="false" round>Add new budget</el-button>
       </router-link>
-      <router-link to="/cards">
-        <el-button class="float-left mr-2" :loading="false" round>Add new card</el-button>
-      </router-link>
+      <div class="float-left mr-2" style="border-radius: 20px;">
+        <el-popover
+            placement="top"
+            width="160"
+            v-model="visible"
+            round>
+          <p>Enter category name:</p>
+          <div style="text-align: right; margin: 0">
+            <el-form ref="form" :model="category" class="p-2">
+              <div class="row">
+                <el-input placeholder="Please input" v-model="category.name" small></el-input>
+                <el-color-picker
+                    v-model="category.color"
+                    show-alpha
+                    :predefine="predefineColors"
+                    class="float-left"
+                >
+                </el-color-picker>
+              </div>
+
+              <el-button size="mini" type="text" @click="visible = false">cancel</el-button>
+              <el-button type="primary" size="mini" @click="handleCategorySubmit">confirm</el-button>
+            </el-form>
+          </div>
+          <el-button slot="reference">Add category</el-button>
+        </el-popover>
+
+      </div>
 
     </el-row>
 
@@ -30,19 +55,24 @@
                 <p>Description: {{ props.row.description }}</p>
                 <p>Date: {{ props.row.date }}</p>
               </div>
-              <div class="col-md-6 col-12 text-center">
+              <div class="col-md-6 col-12 text-center" v-if="props.row.card">
                 <p>Card number: {{ props.row.card.number }}</p>
                 <p>Balance: {{ props.row.card.balance }}$</p>
               </div>
             </div>
 
             <div class="row justify-content-center">
-              <el-button
-                  size="mini"
-                  icon="el-icon-edit"
-                  v-model="visible"
-                  @click="handleEdit(props.row)">Edit
-              </el-button>
+              <router-link :to="{ name: 'BudgetEdit', params: {name: props.row.title, form: props.row, type: 'Edit'}}"
+                           style="text-decoration: none; color: inherit;"
+              >
+                <el-button
+                    size="mini"
+                    icon="el-icon-edit"
+                    v-model="visible">Edit
+                </el-button>
+              </router-link>
+
+
               <el-popover
                   placement="top"
               >
@@ -63,105 +93,6 @@
 
             </div>
           </div>
-          <el-collapse v-bind:style="[available ? {'display': 'none'} : {'display':'inline'}]" accordion>
-            <el-collapse-item title="Edit" name="1">
-              <div class="container-fluid w-75 p-0">
-                <el-form ref="form" :model="sizeForm" @submit="handleEditSubmit" size="mini">
-                  <div class="m-0 p-0 mx-auto justify-content-center">
-                    <div class="row">
-
-                      <div class="col-xl-6 col-12 text-xl-left">
-                        <el-form-item>
-                          <el-radio-group v-model="sizeForm.type">
-                            <el-radio-button label="Spending" default-active></el-radio-button>
-                            <el-radio-button label="Income"></el-radio-button>
-                          </el-radio-group>
-                        </el-form-item>
-                      </div>
-
-                      <div class="col-xl-6 col-12">
-                        <el-form-item prop="is_recurring">
-                          <el-switch
-                              v-model="sizeForm.is_recurring"
-                              active-text="Recurring"
-                              inactive-text="Not recurring">
-                          </el-switch>
-                        </el-form-item>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col">
-                        <el-form-item>
-                          <el-input placeholder="E.g. Shopping" v-model="sizeForm.title">
-                            <template slot="prepend">Title:</template>
-                          </el-input>
-                        </el-form-item>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col">
-                        <el-form-item>
-                          <el-input placeholder="E.g. 100" v-model="sizeForm.amount">
-                            <template slot="append">$</template>
-                          </el-input>
-                        </el-form-item>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col">
-                        <el-form-item prop="desc">
-                          <el-input placeholder="E.g. shopping in Walmart for cereal" v-model="sizeForm.description">
-                            <template slot="prepend">Description</template>
-                          </el-input>
-                        </el-form-item>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-lg col-12">
-                        <el-form-item prop="card">
-                          <el-select v-model="sizeForm.card_id" placeholder="Select card">
-                            <el-option-group
-                                v-for="card in allSortedCards"
-                                :key="card.label"
-                                :label="card.label">
-                              <el-option
-                                  v-for="item in card.types"
-                                  :key="item.value"
-                                  :label="item.label"
-                                  :value="item.value">
-                              </el-option>
-                            </el-option-group>
-                          </el-select>
-                        </el-form-item>
-                      </div>
-
-                      <div class="col-lg col-12">
-                        <el-form-item>
-                          <el-date-picker
-                              v-model="sizeForm.date"
-                              type="date"
-                              placeholder="Pick a day">
-                          </el-date-picker>
-                        </el-form-item>
-                      </div>
-
-                    </div>
-                    <div class="row justify-content-center">
-                      <el-form-item size="medium">
-                        <el-button type="primary" @click="handleEditSubmit">Edit</el-button>
-                        <el-button @click="redirect">Cancel</el-button>
-                      </el-form-item>
-                    </div>
-
-                  </div>
-                </el-form>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
         </template>
 
       </el-table-column>
@@ -219,20 +150,31 @@ export default {
       available: true,
       color: 'red',
       cardMissing: "Brak",
-      sizeForm: {
-        title: '',
-        type: '',
-        date: '',
-        card_id: '',
-        description: '',
-        amount: '',
-        is_recurring: false,
+      category: {
+        name: '',
+        color: 'rgba(255, 69, 0, 0.68)'
       },
-      cards: []
+      cards: [],
+      predefineColors: [
+        '#ff4500',
+        '#ff8c00',
+        '#ffd700',
+        '#90ee90',
+        '#00ced1',
+        '#1e90ff',
+        '#c71585',
+        'rgba(255, 69, 0, 0.68)',
+        'rgb(255, 120, 0)',
+        'hsv(51, 100, 98)',
+        'hsva(120, 40, 94, 0.5)',
+        'hsl(181, 100%, 37%)',
+        'hsla(209, 100%, 56%, 0.73)',
+        '#c7158577'
+      ]
     }
+
   },
   methods: {
-    ...mapActions(['fetchBudget', 'deleteBudget', 'fetchSortedCards', 'updateBudget']),
     setStyle(type) {
       if (type.type === "Income") {
         return 'text-primary'
@@ -271,12 +213,19 @@ export default {
     handleEditSubmit(e) {
       e.preventDefault();
       this.updateBudget(this.sizeForm)
-    }
+    },
+    handleCategorySubmit(e) {
+      e.preventDefault()
+      console.log(this.category)
+      // this.addCategory(this.category)
+    },
+    ...mapActions(['fetchBudget', 'deleteBudget', 'fetchSortedCards', 'updateBudget', 'fetchCategories', 'addCategory']),
   },
-  computed: mapGetters(["allBudget", "allSortedCards"]),
+  computed: mapGetters(["allBudget", "allSortedCards", "allCategories"]),
   created() {
     this.fetchBudget()
     this.fetchSortedCards()
+    this.fetchCategories()
   }
 }
 </script>

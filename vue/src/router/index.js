@@ -12,45 +12,53 @@ import Dashboard from "../components/Dashboard";
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/budget',
-    name: 'Budget',
-    component: MainWindow
-  },
-  {
-    path: '/budget/add',
-    name: 'BudgetAdd',
-    component: BudgetForm
-  },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register
-  },
-  {
-    path: '/cards',
-    name: 'Cards',
-    component: CardsList
-  },
-  {
-    path: '/cards/add',
-    name: 'CardsAdd',
-    component: CardForm
-  },
-  {
-    path: '/',
-    name: 'Dashboard',
-    component: Dashboard
-  },
+    {
+        path: '/budget',
+        name: 'Budget',
+        component: MainWindow
+    },
+    {
+        path: '/budget/add',
+        name: 'BudgetAdd',
+        component: BudgetForm,
+        props: true
+    },
+    {
+        path: '/budget/edit/:name',
+        name: 'BudgetEdit',
+        component: BudgetForm,
+        props: true
+    },
+    {
+        path: '/login',
+        name: 'Login',
+        component: Login
+    },
+    {
+        path: '/register',
+        name: 'Register',
+        component: Register
+    },
+    {
+        path: '/cards',
+        name: 'Cards',
+        component: CardsList
+    },
+    {
+        path: '/cards/add',
+        name: 'CardsAdd',
+        component: CardForm
+    },
+    {
+        path: '/',
+        name: 'Dashboard',
+        component: Dashboard
+    },
 ]
 
 const router = new VueRouter({
-  routes
+    routes,
+    mode: 'history'
 })
 
 export default router

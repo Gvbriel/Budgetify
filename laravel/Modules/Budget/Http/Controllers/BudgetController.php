@@ -8,12 +8,22 @@ use Illuminate\Routing\Controller;
 use Modules\Budget\Entities\Budget;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Support\Renderable;
+use Modules\Budget\Entities\Category;
+use Modules\Budget\Http\Requests\StoreCategoryRequest;
 use Modules\Budget\Transformers\BudgetResource;
 use Modules\Budget\Http\Requests\StoreBudgetRequest;
 use Modules\Budget\Http\Requests\UpdateBudgetRequest;
 
 class BudgetController extends Controller
 {
+    public function getDataForDonutChart()
+    {
+        $budget = Budget::where('owner_id', Auth::user()->id)->get();
+
+    }
+
+
+
     /**
      * Display a listing of the resource.
      * @return Renderable
@@ -33,15 +43,23 @@ class BudgetController extends Controller
     public function store(StoreBudgetRequest $request)
     {
         //$card = Auth::user()->cards;
+        if (is_null($request->description)) {
+            $desc = '';
+        } else {
+            $desc = $request->description;
+
+        }
+
         $budget = Budget::create([
             'amount' => $request->amount,
             'title' => $request->title,
             'date' => Carbon::parse($request->date)->toDateTimeString(),
-            'description' => $request->description,
+            'description' => $desc,
             'type' => $request->type,
             'is_recurring' => $request->is_recurring,
             'user_id' => Auth::user()->id,
             'card_id' => $request->card_id,
+            'category_id' => $request->category_id,
         ]);
 
         return response()->json($budget);
@@ -70,11 +88,12 @@ class BudgetController extends Controller
         $budget = Budget::find($id);
         $budget->amount = $request->amount;
         $budget->title = $request->title;
-        $budget->date = $request->date;
+        $budget->date = Carbon::parse($request->date)->toDateTimeString();
         $budget->description = $request->description;
         $budget->type = $request->type;
         $budget->is_recurring = $request->is_recurring;
         $budget->card_id = $request->card_id;
+        $budget->category_id = $request->category_id;
         $budget->save();
 
         return response()->json($budget);

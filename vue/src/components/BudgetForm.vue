@@ -9,7 +9,7 @@
           <div class="col-xl-6 col-12 text-xl-left">
             <el-form-item>
               <el-radio-group v-model="sizeForm.type">
-                <el-radio-button label="Spending" default-active></el-radio-button>
+                <el-radio-button default-active label="Spending"></el-radio-button>
                 <el-radio-button label="Income"></el-radio-button>
               </el-radio-group>
             </el-form-item>
@@ -81,17 +81,12 @@
           <div class="col-lg col-12">
             <el-form-item prop="category">
               <el-select v-model="sizeForm.category_id" placeholder="Select category">
-                <el-option-group
-                    v-for="card in allSortedCards"
-                    :key="card.label"
-                    :label="card.label">
-                  <el-option
-                      v-for="item in card.types"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                  </el-option>
-                </el-option-group>
+                <el-option
+                    v-for="item in allCategories"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                </el-option>
               </el-select>
             </el-form-item>
           </div>
@@ -110,15 +105,13 @@
 
         <div class="col-12">
           <el-form-item size="medium">
-            <el-button type="primary" @click="onSubmit">Create</el-button>
+            <el-button type="primary" @click="onSubmit">{{ this.actionType }}</el-button>
             <el-button @click="redirect">Cancel</el-button>
           </el-form-item>
         </div>
       </div>
     </el-form>
   </div>
-
-
 </template>
 
 <script>
@@ -127,11 +120,15 @@ import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "BudgetForm",
+  props: {
+    form: Object,
+    type: String
+  },
   data() {
     return {
       sizeForm: {
         title: '',
-        type: '',
+        type: 'Spending',
         date: '',
         card_id: '',
         description: '',
@@ -139,41 +136,40 @@ export default {
         category_id: '',
         is_recurring: false,
       },
-      cards: [{
-        label: "Credit",
-        types: [{
-          value: "Main credit",
-          label: "Main credit",
-        }]
-      }, {
-        label: "Debit",
-        types: [{
-          value: "Main Debit",
-          label: "Main Debit",
-        }]
-      }
-      ]
+      actionType: this.type
     };
   },
-  computed: mapGetters(["allSortedCards"]),
+  computed: {
+    ...mapGetters(['allSortedCards', 'allCategories']),
+  },
   created() {
-    this.fetchSortedCards()
+    this.fetchSortedCards();
+    this.fetchCategories();
+    console.log(this.allCategories);
+    console.log(this.$props)
+    this.setForm()
   },
   methods: {
-    ...mapActions(['addBudget', 'fetchSortedCards']),
+    ...mapActions(['addBudget', 'fetchSortedCards', 'fetchCategories', 'updateBudget']),
     onSubmit(e) {
       e.preventDefault();
-      console.log(this.sizeForm)
-      this.addBudget(this.sizeForm);
-      console.log('submit!');
+      if (this.actionType == 'Edit') {
+        this.updateBudget(this.sizeForm)
+      } else {
+        this.addBudget(this.sizeForm);
+      }
       this.sizeForm = '';
       alert("Added successfully!");
       router.go(-1);
     },
     redirect() {
       router.go(-1);
+    },
+    setForm() {
+      if (this.actionType == 'Edit') {
+        this.sizeForm = this.form
+      }
     }
-
   }
 }
 </script>

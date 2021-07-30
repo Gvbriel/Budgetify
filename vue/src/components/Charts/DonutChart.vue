@@ -56,7 +56,7 @@ export default {
             name: "Traffic Sources",
             type: "pie",
             radius: "55%",
-            center: ["50%", "60%"],
+            center: ["50%", "50%"],
             data: [
               {value: 335, name: "Direct"},
               {value: 310, name: "Email"},

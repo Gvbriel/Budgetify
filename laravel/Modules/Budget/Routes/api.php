@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Modules\Budget\Http\Controllers\BudgetController;
 use Modules\Budget\Http\Controllers\CardController;
+use Modules\Budget\Http\Controllers\CategoryController;
 
 
 /*
@@ -27,6 +28,8 @@ Route::middleware('auth:api')->get('/authorized', function () {
 
 
 Route::namespace('\\')->middleware('auth:api')->group(function () {
+    Route::get('/categories/all', [CategoryController::class, 'getCategories']);
+    Route::post('/categories', [CategoryController::class, 'store']);
     Route::get('/images', [CardController::class, 'getImages']);
     Route::get('/cards/sorted', [CardController::class, 'sortedCards']);
     Route::resource('budget', BudgetController::class);

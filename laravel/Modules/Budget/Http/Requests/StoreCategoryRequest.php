@@ -4,7 +4,7 @@ namespace Modules\Budget\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreBudgetRequest extends FormRequest
+class StoreCategoryRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -14,13 +14,7 @@ class StoreBudgetRequest extends FormRequest
     public function rules()
     {
         return [
-            'amount' => ['required'],
-            'title' => ['required'],
-            'date' => ['required'],
-            'description' => ['max:256'],
-            'type' => ['required'],
-            'is_recurring' => ['required'],
-            'card_id' => ['required'],
+            'name' => ['required', 'min:1'],
         ];
     }
 
