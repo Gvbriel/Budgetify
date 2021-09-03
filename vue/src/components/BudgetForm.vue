@@ -1,116 +1,102 @@
 <template>
   <div class="container-fluid w-50 p-0">
 
-    <el-form ref="form" :model="sizeForm" @submit="onSubmit" size="mini">
+    <form v-loading="isLoading" class="justify-content-center">
 
-      <div class="m-0 p-0 mx-auto justify-content-center">
-        <div class="row">
-
-          <div class="col-xl-6 col-12 text-xl-left">
-            <el-form-item>
-              <el-radio-group v-model="sizeForm.type">
-                <el-radio-button default-active label="Spending"></el-radio-button>
-                <el-radio-button label="Income"></el-radio-button>
-              </el-radio-group>
-            </el-form-item>
+      <div class="m-0 p-0 mx-auto">
+        <div class="row justify-content-around">
+          <div class="col-lg-4 col-12">
+              <vs-switch v-model="sizeForm.type">
+                <template #off>
+                  Spending
+                </template>
+                <template #on>
+                  Income
+                </template>
+              </vs-switch>
           </div>
 
-          <div class="col-xl-6 col-12">
-            <el-form-item prop="is_recurring">
-              <el-switch
-                  v-model="sizeForm.is_recurring"
-                  active-text="Recurring"
-                  inactive-text="Not recurring">
-              </el-switch>
-            </el-form-item>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col">
-            <el-form-item>
-              <el-input placeholder="E.g. Shopping" v-model="sizeForm.title">
-                <template slot="prepend">Title:</template>
-              </el-input>
-            </el-form-item>
+          <div class="col-lg-8 col-12">
+            <vs-row>
+              <vs-radio v-model="sizeForm.is_recurring" val="1">
+                Recurring
+              </vs-radio>
+              |
+              <vs-radio label-before v-model="sizeForm.is_recurring" val="0">
+                Not recurring
+              </vs-radio>
+            </vs-row>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col">
-            <el-form-item>
-              <el-input placeholder="E.g. 100" v-model="sizeForm.amount">
-                <template slot="append">$</template>
-              </el-input>
-            </el-form-item>
+        <div class="row mt-4 justify-content-center">
+          <div class="col-lg-4 col-12">
+              <vs-input
+                  primary
+                  v-model="sizeForm.title"
+                  placeholder="Title"
+              />
+          </div>
+          <div class="col-lg-4 col-12">
+            <vs-input success icon-before v-model="sizeForm.amount" placeholder="Amount">
+              <template #icon>
+                <i class='bx bx-money'></i>
+              </template>
+            </vs-input>
           </div>
         </div>
 
-        <div class="row">
-
-          <div class="col">
-            <el-form-item prop="desc">
-              <el-input placeholder="E.g. shopping in Walmart for cereal" v-model="sizeForm.description">
-                <template slot="prepend">Description</template>
-              </el-input>
-            </el-form-item>
+        <div class="row mt-4 justify-content-center">
+          <div class="col-8">
+            <vs-input width="100%" v-model="sizeForm.description" placeholder="Description"/>
           </div>
-
         </div>
 
-        <div class="row justify-content-between">
-
-          <div class="col-lg col-12">
-            <el-form-item prop="card">
-              <el-select v-model="sizeForm.card_id" placeholder="Select card">
-                <el-option-group
-                    v-for="card in allSortedCards"
-                    :key="card.label"
-                    :label="card.label">
-                  <el-option
-                      v-for="item in card.types"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value">
-                  </el-option>
-                </el-option-group>
-              </el-select>
-            </el-form-item>
+        <div class="row mt-4 justify-content-center">
+          <div class="col-lg-4 col-12">
+            <vs-select
+                filter
+                placeholder="Choose card"
+                v-model="sizeForm.card_id"
+                v-if="allSortedCards"
+                :key="allSortedCards.length"
+            >
+              <vs-option-group v-for="type in allSortedCards" :key="type.label">
+                <div slot="title">
+                  {{type.label}}
+                </div>
+                <vs-option v-for="option in type.types" :label="option.label" :value="option.value" :key="option.id">
+                  {{option.label}}
+                </vs-option>
+              </vs-option-group>
+            </vs-select>
           </div>
 
-          <div class="col-lg col-12">
-            <el-form-item prop="category">
-              <el-select v-model="sizeForm.category_id" placeholder="Select category">
-                <el-option
-                    v-for="item in allCategories"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-                </el-option>
-              </el-select>
-            </el-form-item>
+          <div class="col-lg-4 col-12">
+            <vs-select placeholder="Choose category" v-model="sizeForm.category_id" :key="allCategories.length">
+              <vs-option v-for="item in allCategories" :key="item.id" :label="item.name" :value="item.id">
+                {{item.name}}
+              </vs-option>
+            </vs-select>
           </div>
-
-          <div class="col-lg col-12">
-            <el-form-item>
-              <el-date-picker
-                  v-model="sizeForm.date"
-                  type="date"
-                  placeholder="Pick a day">
-              </el-date-picker>
-            </el-form-item>
-          </div>
-
         </div>
 
-        <div class="col-12">
-          <el-form-item size="medium">
-            <el-button type="primary" @click="onSubmit">{{ this.actionType }}</el-button>
-            <el-button @click="redirect">Cancel</el-button>
-          </el-form-item>
+        <div class="row mt-4 justify-content-center">
+          <div class="col-lg-4 col-12">
+            <vs-input
+                placeholder="Choose date"
+                type="date"
+                v-model="sizeForm.date"
+            />
+          </div>
+          <div class="col-lg-4 col-12">
+            <vs-button @click="onSubmit">
+              {{this.actionType}}
+            </vs-button>
+          </div>
         </div>
       </div>
-    </el-form>
+    </form>
   </div>
 </template>
 
@@ -126,6 +112,9 @@ export default {
   },
   data() {
     return {
+      isLoading: true,
+      validated: false,
+      active: 0,
       sizeForm: {
         title: '',
         type: 'Spending',
@@ -134,33 +123,48 @@ export default {
         description: '',
         amount: '',
         category_id: '',
-        is_recurring: false,
+        is_recurring: 0,
       },
-      actionType: this.type
+      actionType: localStorage.getItem('type')
     };
   },
   computed: {
     ...mapGetters(['allSortedCards', 'allCategories']),
   },
   created() {
+    localStorage.setItem('type', this.$props.type)
+    this.actionType = localStorage.getItem('type');
     this.fetchSortedCards();
-    this.fetchCategories();
-    console.log(this.allCategories);
-    console.log(this.$props)
+    console.log(this.allSortedCards)
     this.setForm()
+    this.fetchCategories().then(()=>{this.isLoading = false});
   },
   methods: {
     ...mapActions(['addBudget', 'fetchSortedCards', 'fetchCategories', 'updateBudget']),
     onSubmit(e) {
       e.preventDefault();
       if (this.actionType == 'Edit') {
-        this.updateBudget(this.sizeForm)
+        console.log
+        this.updateBudget(this.sizeForm).then((response)=>{
+          console.log(response)
+          this.validated = true
+          this.validatedForm()
+        })
       } else {
-        this.addBudget(this.sizeForm);
+        this.addBudget(this.sizeForm).then(()=>{
+          this.validated = true
+          this.validatedForm()
+        });
       }
-      this.sizeForm = '';
-      alert("Added successfully!");
-      router.go(-1);
+    },
+    validatedForm(e){
+      if(this.validated){
+        this.sizeForm = '';
+        alert("Added successfully!");
+        localStorage.removeItem('type');
+        router.go(-1);
+        e.preventDefault()
+      }
     },
     redirect() {
       router.go(-1);
@@ -169,6 +173,9 @@ export default {
       if (this.actionType == 'Edit') {
         this.sizeForm = this.form
       }
+    },
+    checkForm(e){
+
     }
   }
 }
@@ -181,8 +188,11 @@ export default {
   border: 1px solid grey;
 }
 
+input#vs-input--34{
+  width: 100px !important;
+}
+
 .w {
   width: 60%;
-
 }
 </style>

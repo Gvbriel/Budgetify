@@ -8,6 +8,10 @@ import Register from "@/views/user/Register";
 import CardsList from "@/components/CardsList";
 import CardForm from "@/components/CardForm";
 import Dashboard from "../components/Dashboard";
+import CardDetails from "../components/CardDetails";
+import SavingsList from "../components/SavingsList";
+import GoalsList from "../components/GoalsList";
+import GoalForm from "../components/GoalForm";
 
 Vue.use(VueRouter)
 
@@ -27,6 +31,12 @@ const routes = [
         path: '/budget/edit/:name',
         name: 'BudgetEdit',
         component: BudgetForm,
+        props: true
+    },
+    {
+        path: '/card/details/:name',
+        name: 'CardDetails',
+        component: CardDetails,
         props: true
     },
     {
@@ -53,6 +63,16 @@ const routes = [
         path: '/',
         name: 'Dashboard',
         component: Dashboard
+    },
+    {
+        path: '/goals',
+        name: 'GoalsList',
+        component: GoalsList
+    },
+    {
+        path: '/goals/add',
+        name: 'GoalForm',
+        component: GoalForm
     },
 ]
 

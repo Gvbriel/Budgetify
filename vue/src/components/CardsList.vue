@@ -1,26 +1,51 @@
 <template>
-  <div class="container">
+  <div class="container" v-loading="isLoading">
     <div class="row justify-content-center">
       <el-col class="m-2 col-4 col-sm-3" v-for="card in allCards" :key="card.id">
         <el-card :body-style="{ padding: '0px' }">
-          <img :src="card.image" class="img-thumbnail">
+          <img :src="card.image" v-if="card.image" class="img-thumbnail">
           <div style="padding: 14px;">
-            <span>{{ card.name }}</span>
-            <p class="text-left">{{ card.type }}</p>
+            <span><h5>{{ card.name }}</h5></span>
+            <p class="text-right">{{ card.type }}</p>
             <p class="text-right">Balance: {{ card.balance }} $</p>
             <div class="bottom clearfix row justify-content-between">
+
               <div class="ml-3 mr-auto">
-                <i class="el-icon-delete" @click="handleDelete(card.id)"></i>
+                <el-popover
+                    placement="top"
+                    width="200"
+                    v-model="visible">
+                  <p>Are you sure to delete this?</p>
+                  <div style="text-align: right; margin: 0">
+                    <el-button size="mini" type="text" @click="visible = false" >cancel</el-button>
+                    <el-button type="primary" size="mini" @click="handleDelete(card.id), visible = false">confirm</el-button>
+                  </div>
+                  <el-button slot="reference"><i class="el-icon-delete"></i>
+                  </el-button>
+                </el-popover>
               </div>
-              <el-button type="text" class="button mr-3">Show details</el-button>
+
+              <div>
+                <router-link :to="{ name: 'CardDetails', params: {name: card.name, card_id: card.id}}">
+                  <el-button type="text" class="button mr-3" @click="setId(card.id)">Show details</el-button>
+                </router-link>
+              </div>
+
             </div>
           </div>
         </el-card>
       </el-col>
     </div>
 
-    <div class="row justify-content-center">
-      <CardForm :images="allImages"/>
+    <div class="row justify-content-center mt-4">
+      <el-collapse>
+        <el-collapse-item width="1000px" name="1">
+          <template slot="title">
+            Add new card<i class="header-icon el-icon-plus ml-2"></i>
+          </template>
+          <CardForm :images="allImages"/>
+        </el-collapse-item>
+      </el-collapse>
     </div>
 
   </div>
@@ -34,6 +59,12 @@ import {mapGetters, mapActions} from "vuex";
 export default {
   name: "CardsList",
   components: {CardForm},
+  data() {
+    return {
+      isLoading: true,
+      visible: false
+    }
+  },
   computed: mapGetters(["allCards", "allImages"]),
   methods: {
     ...mapActions(['fetchCards', 'fetchImages', 'deleteCard']),
@@ -41,11 +72,19 @@ export default {
       this.deleteCard(id).then(() => {
         window.location.reload();
       })
+    },
+    setId(id){
+      localStorage.setItem('card_id', id);
     }
   },
   created() {
-    this.fetchCards()
-    this.fetchImages()
+    localStorage.removeItem('card')
+    if(this.allCards.length === 0){
+      this.fetchCards().then(()=>this.isLoading = false)
+    }
+    if(this.allImages.length === 0){
+      this.fetchImages().then(()=>this.isLoading = false)
+    }
   }
 }
 </script>

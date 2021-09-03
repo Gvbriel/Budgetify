@@ -2,6 +2,7 @@
 
 namespace Modules\Budget\Http\Controllers;
 
+use App\Http\Helpers\ResponseHelper;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
@@ -18,10 +19,22 @@ class BudgetController extends Controller
 {
     public function getDataForDonutChart()
     {
-        $budget = Budget::where('owner_id', Auth::user()->id)->get();
+        $budget = Budget::where('user_id', Auth::user()->id)->where('type', 'Spending')->get()->sortBy('id')->groupBy('category_id');
+        $budg = [];
+        $val = 0;
+        foreach ($budget as $key => $bud)
+        {
+            foreach ($bud as $b)
+            {
+                $val += $b->amount;
+            }
+            $cat = Category::find($key);
+            array_push($budg, ['name' => $cat->name, 'value' => $val, 'color' => "am4core.color(".'"'.$cat->color.'"'.')']);
+            $val = 0;
+        }
 
+        return response()->json($budg);
     }
-
 
 
     /**
@@ -30,8 +43,7 @@ class BudgetController extends Controller
      */
     public function index()
     {
-        $budget = BudgetResource::collection(Budget::where('user_id', Auth::user()->id)->get());
-
+        $budget = ResponseHelper::getPagination(BudgetResource::collection(Budget::where('user_id', Auth::user()->id)->paginate()));
         return response()->json($budget);
     }
 

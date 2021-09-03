@@ -11,7 +11,8 @@ class Category extends Model
 
     protected $fillable = [
         'name',
-        'owner_id'
+        'owner_id',
+        'color'
     ];
 
     protected static function newFactory()

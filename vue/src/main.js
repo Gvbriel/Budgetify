@@ -8,14 +8,22 @@ import moment from "moment";
 import "./plugins/element.js";
 import vSelect from "vue-select";
 import 'vue-select/dist/vue-select.css';
+import LoadingMixin from './LoadingNotificationMixin'
+import Vuesax from 'vuesax'
+import 'vuesax/dist/vuesax.css'
+import 'boxicons'
+import VueEllipseProgress from 'vue-ellipse-progress';
 
 Vue.component('v-select', vSelect);
+Vue.mixin(LoadingMixin)
 Vue.use(ElementUI);
+Vue.use(Vuesax);
+Vue.use(VueEllipseProgress);
 Vue.config.productionTip = false;
 
 // Vue.prototype.$url = "http://api.budgetify.com";
 
-axios.defaults.baseURL = 'http://api.budgetifly.com/api';
+axios.defaults.baseURL = 'http://api.budgetify.com/api';
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 axios.defaults.headers.common = {
@@ -29,3 +37,4 @@ new Vue({
     store,
     render: (h) => h(App),
 }).$mount("#app");
+

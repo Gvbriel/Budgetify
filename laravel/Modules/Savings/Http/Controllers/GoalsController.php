@@ -1,12 +1,16 @@
 <?php
 
-namespace Modules\Budget\Http\Controllers;
+namespace Modules\Savings\Http\Controllers;
 
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Auth;
+use Modules\Savings\Entities\Goal;
+use Modules\Savings\Http\Requests\StoreGoalRequest;
+use Modules\Savings\Transformers\GoalResource;
 
-class SavingsController extends Controller
+class GoalsController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +18,9 @@ class SavingsController extends Controller
      */
     public function index()
     {
-        return view('budget::index');
+        $goals = Goal::where('user_id', Auth::user()->id)->get();
+
+        return response()->json(GoalResource::collection($goals));
     }
 
     /**
@@ -23,7 +29,7 @@ class SavingsController extends Controller
      */
     public function create()
     {
-        return view('budget::create');
+        return view('savings::create');
     }
 
     /**
@@ -31,9 +37,18 @@ class SavingsController extends Controller
      * @param Request $request
      * @return Renderable
      */
-    public function store(Request $request)
+    public function store(StoreGoalRequest $request)
     {
-        //
+        $goal = Goal::create([
+            'name' => $request->name,
+            'goal' => $request->goal,
+            'description' => $request->description,
+            'currency' => $request->currency,
+            'balance' => 0,
+            'user_id' => Auth::user()->id,
+        ]);
+
+        return response()->json($goal);
     }
 
     /**
@@ -43,7 +58,7 @@ class SavingsController extends Controller
      */
     public function show($id)
     {
-        return view('budget::show');
+        return view('savings::show');
     }
 
     /**
@@ -53,7 +68,7 @@ class SavingsController extends Controller
      */
     public function edit($id)
     {
-        return view('budget::edit');
+        return view('savings::edit');
     }
 
     /**
@@ -74,6 +89,15 @@ class SavingsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        if(Goal::find($id)){
+            $goal = Goal::find($id);
+            $savings = $goal->savings;
+            foreach($savings as $saving){
+                $saving->delete();
+            }
+            $goal->delete();
+            return true;
+        }
+
     }
 }

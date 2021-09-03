@@ -1,7 +1,6 @@
 <template>
   <el-form ref="form" class="m-4" :model="cardForm" @submit="onSubmit"
            size="small">
-
     <div class="mx-auto m-0 p-0 justify-content-center">
       <div class="row">
         <div class="col-lg-4 col-12 text-left">
@@ -86,11 +85,10 @@ export default {
       this.cardForm.image_id = this.cardForm.image_id.id
       this.cardForm.balance = parseFloat(this.cardForm.balance)
       console.log(this.cardForm);
-      this.addCard(this.cardForm).then(() => console.log("done")
-      );
+      this.addCard(this.cardForm).then(() => console.log("done"));
+      this.cardForm = ''
     },
     clearForm(e) {
-      console.log(this.cardForm);
       this.cardForm = {
         name: '',
         type: '',
@@ -99,7 +97,7 @@ export default {
       }
     },
     onChange(image) {
-      console.log(image)
+
     }
   }
 }

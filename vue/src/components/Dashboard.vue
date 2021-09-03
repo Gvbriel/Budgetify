@@ -1,6 +1,5 @@
 <template>
   <div class="container-fluid">
-    CIAO
     <DonutChart/>
   </div>
 </template>

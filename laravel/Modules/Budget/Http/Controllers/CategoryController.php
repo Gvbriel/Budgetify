@@ -12,11 +12,21 @@ use Modules\Budget\Http\Requests\StoreCategoryRequest;
 class CategoryController extends Controller
 {
 
+
     public function getCategories()
     {
         $cat = Category::where('owner_id', Auth::user()->id)->orWhere(function ($query) {
             $query->where('owner_id', 0);
         })->get();
+
+        return response()->json($cat);
+    }
+
+    public function getCategoriesNames()
+    {
+        $cat = Category::where('owner_id', Auth::user()->id)->orWhere(function ($query) {
+            $query->where('owner_id', 0)->orWhere('owner_id', null);
+        })->get()->sortBy('id');
 
         return response()->json($cat);
     }
@@ -39,7 +49,8 @@ class CategoryController extends Controller
     {
         $cat = Category::create([
             'name' => $request->name,
-            'owner_id' => Auth::user()->id
+            'owner_id' => Auth::user()->id,
+            'color' => $request->color
         ]);
 
         return response()->json($cat);

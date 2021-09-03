@@ -28,9 +28,13 @@ Route::middleware('auth:api')->get('/authorized', function () {
 
 
 Route::namespace('\\')->middleware('auth:api')->group(function () {
+    Route::get('/chart/donut', [BudgetController::class, 'getDataForDonutChart']);
+
     Route::get('/categories/all', [CategoryController::class, 'getCategories']);
+    Route::get('/categories/names', [CategoryController::class, 'getCategoriesNames']);
     Route::post('/categories', [CategoryController::class, 'store']);
     Route::get('/images', [CardController::class, 'getImages']);
+    Route::post('/images', [CardController::class, 'storeImages']);
     Route::get('/cards/sorted', [CardController::class, 'sortedCards']);
     Route::resource('budget', BudgetController::class);
     Route::resource('cards', CardController::class);

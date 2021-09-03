@@ -17,10 +17,10 @@ class UpdateBudgetRequest extends FormRequest
             'amount' => ['required'],
             'title' => ['required'],
             'date' => ['required'],
-            'description' => ['required', 'string', 'max:256'],
+            'description' => ['max:256'],
             'type' => ['required'],
             'is_recurring' => ['required'],
-            'card_id' => ['required'],
+            'card_id' => [],
         ];
     }
 

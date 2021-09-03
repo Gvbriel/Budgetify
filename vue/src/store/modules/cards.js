@@ -13,20 +13,21 @@ const formatDate = (value) => {
 const state = {
     cards: [],
     sortedCards: [],
-    images: []
+    images: [],
+    card: [],
 };
 
 const getters = {
     allCards: (state) => state.cards,
     allImages: (state) => state.images,
-    allSortedCards: (state) => state.sortedCards
+    allSortedCards: (state) => state.sortedCards,
+    getCard: (state) => state.card
 };
 
 const actions = {
     async fetchCards({commit, state}) {
         const response = await axios.get('/cards');
-
-        console.log(response.data);
+        console.log(response.data)
         commit("setCards", response.data);
     },
     async addCard({commit}, payload) {
@@ -35,7 +36,6 @@ const actions = {
     },
     async fetchSortedCards({commit}) {
         const response = await axios.get('/cards/sorted');
-        console.log(response.data);
         commit("setSortedCards", response.data);
     },
     async deleteCard({commit}, id) {
@@ -47,13 +47,27 @@ const actions = {
         const response = await axios.get('/images');
         console.log(response.data);
         commit("setImages", response.data);
+    },
+    async addImage({commit}){
+        const response = await axios.post('/post').then((response) => {
+            console.log(response.data);
+            commit('addImage', response.data);
+        })
+    },
+    async fetchCard({commit}, id){
+        const response = await axios.get('/cards' + `/${id}`).then((response) => {
+            console.log(response.data)
+            commit("setCard", response.data);
+        });
     }
 };
 
 const mutations = {
     setCards: (state, cards) => (state.cards = cards),
+    setCard: (state, card) => (state.card = card),
     newCard: (state, card) => state.cards.unshift(card),
     setImages: (state, images) => state.images = images,
+    addImage: (state, image) => state.images.unshift(image),
     setSortedCards: (state, cards) => state.sortedCards = cards,
     deleteCard: (state, id) => {
         let prop = state.cards.findIndex(budget => id === budget.id)

@@ -2,7 +2,9 @@
 
 namespace Modules\Budget\Http\Controllers;
 
+use App\Http\Helpers\ResponseHelper;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Budget\Entities\Budget;
 use Modules\Budget\Entities\Card;
 use Illuminate\Routing\Controller;
@@ -10,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Support\Renderable;
 use Modules\Budget\Entities\Image;
 use Modules\Budget\Transformers\CardResource;
+use Modules\Budget\Transformers\CardSingleResource;
 
 
 class CardController extends Controller
@@ -20,8 +23,7 @@ class CardController extends Controller
 //        $ca = $c->where('owner_id', Auth::user()->id);
 
         $cards = Card::where('owner_id', Auth::user()->id)->get()->groupBy('type')->toArray();
-        $types = array_unique(Card::all()->pluck('type')->toArray());
-
+        $types = ['Credit', 'Debit'];
         $return = [];
         foreach ($types as $type) {
             $cards[$type] = array_map(function ($card) {
@@ -39,6 +41,16 @@ class CardController extends Controller
         return response()->json($return);
     }
 
+    public function storeImages(Request $request)
+    {
+        $img = Image::create([
+            'name' => $request->name,
+            'url' => $request->url
+        ]);
+
+        return response()->json($img);
+    }
+
     public function getImages()
     {
         $images = Image::all();
@@ -53,7 +65,7 @@ class CardController extends Controller
     public function index()
     {
         try {
-            $cards = CardResource::collection(Card::where('owner_id', Auth::user()->id)->get());
+            $cards = CardResource::collection(Card::where('owner_id', Auth::user()->id)->paginate());
             return response()->json($cards);
         } catch (\Illuminate\Database\QueryException $ex) {
             return $ex->getMessage();
@@ -96,7 +108,7 @@ class CardController extends Controller
      */
     public function show($id)
     {
-        return response()->json(Card::find($id));
+        return response()->json(new CardSingleResource(Card::find($id)));
     }
 
     /**

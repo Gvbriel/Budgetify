@@ -8,6 +8,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -48,7 +49,8 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        if(Auth::attempt($login))
+
+        if(!Auth::attempt(['email'=>$login['email'], 'password'=>$login['password']]))
         {
             return response(['message' => 'Invalid login']);
         }

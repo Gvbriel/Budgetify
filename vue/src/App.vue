@@ -1,23 +1,7 @@
 <template>
   <div id="app">
-    <div class="container-fluid">
-      <template v-if="checkAuth()">
-        <router-link to="/" class="mr-4">Hello {{ name }}!</router-link>
-        <router-link to="/budget">Budget</router-link>
-        |
-        <router-link to="/cards">Cards</router-link>
-        |
-      </template>
-      <template v-if="!checkAuth()">
-        <router-link to="/login">Login</router-link>
-        |
-        <router-link to="/register">Register</router-link>
-      </template>
-      <template v-else>
-        <a @click="logout()">
-          <router-link to="/">Logout</router-link>
-        </a>
-      </template>
+    <div class="container-fluid mb-4">
+      <NavBar/>
     </div>
     <div class="margin">
       <router-view></router-view>
@@ -27,10 +11,12 @@
 
 <script>
 import {mapGetters} from "vuex";
+import router from "./router";
+import NavBar from "./components/NavBar";
 
 export default {
   name: 'app',
-  components: {},
+  components: {NavBar},
   methods: {
     ...mapGetters(['isAuthenticated']),
     checkAuth() {
@@ -42,6 +28,9 @@ export default {
     logout() {
       localStorage.clear()
       window.location.reload();
+    },
+    goBack(){
+      router.go(-1)
     }
   },
   mounted() {
@@ -58,19 +47,26 @@ export default {
 <style>
 @import '~bootstrap/dist/css/bootstrap.css';
 
+.vertical-center{
+  min-height: 85%;
+  min-height: 85vh;
+
+  display: flex;
+  align-items: center;
+}
 
 .margin {
-  margin-top: 5%;
+  margin-top: 6%;
 }
 
-.center {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  min-height: 60vh;
-}
+/*.center {*/
+/*  display: flex;*/
+/*  flex-direction: column;*/
+/*  justify-content: center;*/
+/*  align-items: center;*/
+/*  text-align: center;*/
+/*  min-height: 60vh;*/
+/*}*/
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;

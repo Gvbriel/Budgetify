@@ -20,7 +20,7 @@ class StoreBudgetRequest extends FormRequest
             'description' => ['max:256'],
             'type' => ['required'],
             'is_recurring' => ['required'],
-            'card_id' => ['required'],
+            'card_id' => [],
         ];
     }
 

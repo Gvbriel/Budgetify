@@ -22,7 +22,7 @@ class Budget extends Model
         'is_recurring',
         'user_id',
         'card_id',
-        'category_id'
+        'category_id',
     ];
 
     public function card()

@@ -26,6 +26,10 @@ class Card extends Model
         'initial_balance'
     ];
 
+    public function budget() {
+        return $this->hasMany(Budget::class);
+    }
+
     public function owner()
     {
         return $this->hasOne(User::class, 'id', 'owner_id');

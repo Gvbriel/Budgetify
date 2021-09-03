@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGoalsTable extends Migration
+class CreateSavingsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,13 @@ class CreateGoalsTable extends Migration
      */
     public function up()
     {
-        Schema::create('goals', function (Blueprint $table) {
+        Schema::create('savings', function (Blueprint $table) {
             $table->id();
             $table->text('name');
             $table->double('amount');
-            $table->boolean('is_finished');
-            $table->foreignId('owner_id');
+            $table->text('currency');
+            $table->foreignId('goal_id');
+            $table->foreignId('user_id');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ class CreateGoalsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('goals');
+        Schema::dropIfExists('savings');
     }
 }

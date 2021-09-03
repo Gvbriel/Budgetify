@@ -1,7 +1,8 @@
 <?php
 
-namespace Modules\Budget\Entities;
+namespace Modules\Savings\Entities;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -10,18 +11,25 @@ class Saving extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'name',
         'amount',
-        'goal_id'
+        'currency',
+        'goal_id',
+        'user_id',
     ];
 
     protected static function newFactory()
     {
-        return \Modules\Budget\Database\factories\SavingFactory::new();
+        return \Modules\Savings\Database\factories\SavingFactory::new();
     }
 
-    public function user()
+    public function owner()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function goal()
+    {
+        return $this->hasOne(Goal::class, 'id', 'goal_id');
     }
 }

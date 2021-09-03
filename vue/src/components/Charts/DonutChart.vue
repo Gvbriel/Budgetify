@@ -1,80 +1,67 @@
 <template>
-  <v-chart class="chart" :option="option"/>
+  <div id="chartdiv" v-loading="isLoading" style="height: auto;"></div>
 </template>
 
 <script>
-import {use} from "echarts/core";
-import {CanvasRenderer} from "echarts/renderers";
-import {PieChart} from "echarts/charts";
-import {
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent
-} from "echarts/components";
-import VChart, {THEME_KEY} from "vue-echarts";
+import * as am4core from "@amcharts/amcharts4/core";
+import * as am4charts from "@amcharts/amcharts4/charts";
+import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import {mapActions, mapGetters} from "vuex";
 
-use([
-  CanvasRenderer,
-  PieChart,
-  TitleComponent,
-  TooltipComponent,
-  LegendComponent
-]);
 
 export default {
   name: "DonutChart",
-  components: {
-    VChart
-  },
-  provide: {
-    [THEME_KEY]: "dark"
-  },
+  components: {},
+
   data() {
     return {
-      option: {
-        title: {
-          text: "Traffic Sources",
-          left: "center"
-        },
-        tooltip: {
-          trigger: "item",
-          formatter: "{a} <br/>{b} : {c} ({d}%)"
-        },
-        legend: {
-          orient: "vertical",
-          left: "left",
-          data: [
-            "Direct",
-            "Email",
-            "Ad Networks",
-            "Video Ads",
-            "Search Engines"
-          ]
-        },
-        series: [
-          {
-            name: "Traffic Sources",
-            type: "pie",
-            radius: "55%",
-            center: ["50%", "50%"],
-            data: [
-              {value: 335, name: "Direct"},
-              {value: 310, name: "Email"},
-              {value: 234, name: "Ad Networks"},
-              {value: 135, name: "Video Ads"},
-              {value: 1548, name: "Search Engines"}
-            ],
-            emphasis: {
-              itemStyle: {
-                shadowBlur: 10,
-                shadowOffsetX: 0,
-                shadowColor: "rgba(0, 0, 0, 0.5)"
-              }
-            }
-          }
-        ]
-      }
+      isLoading: true,
     };
+  },
+  methods: {
+    ...mapActions(['fetchDonutData', 'fetchCategoriesNames']),
+    createChart(){
+      am4core.useTheme(am4themes_animated);
+      let chart = am4core.create("chartdiv", am4charts.PieChart);
+      chart.hiddenState.properties.opacity = 0;
+      chart.data = this.getDataForDonutChart;
+      chart.radius = am4core.percent(70);
+      chart.innerRadius = am4core.percent(0);
+      chart.startAngle = 0;
+      chart.endAngle = 360;
+      chart.width = am4core.percent(100);
+
+      let series = chart.series.push(new am4charts.PieSeries());
+      series.dataFields.value = "value";
+      series.dataFields.category = "name";
+
+      series.slices.template.cornerRadius = 0;
+      series.slices.template.innerCornerRadius = 0;
+      series.slices.template.draggable = false;
+      series.slices.template.inert = true;
+      series.alignLabels = true;
+      // series.labels.template.text = "{category}: {value.value}";
+      // series.slices.template.tooltipText = "{category}: {value.value}";
+      // chart.legend.valueLabels.template.text = "{category}: {value.value}";
+
+      series.hiddenState.properties.startAngle = 90;
+      series.hiddenState.properties.endAngle = 90;
+
+      chart.legend = new am4charts.Legend();
+    }
+  },
+  computed: mapGetters(['getDataForDonutChart', 'allCategoriesNames']),
+  created(){
+    this.fetchCategoriesNames()
+    this.fetchDonutData()
+        .then(()=>{
+          this.createChart()
+          this.isLoading = false;
+          console.log(this.getDataForDonutChart)
+        })
+  },
+  mounted(){
+
   }
 };
 </script>
