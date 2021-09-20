@@ -17,7 +17,6 @@ const getters = {
 const actions = {
     async retrieveToken({commit, getters}, payload) {
         return new Promise((resolve, reject) => {
-            console.log(payload);
             const response = axios.post("/login", payload).then((response) => {
                 if(response.data.access_token) {
                     const token = response.data.access_token;
@@ -31,7 +30,6 @@ const actions = {
                 reject(error)
             });
         })
-
     },
     async register({commit}, payload) {
         return new Promise((resolve, reject) => {

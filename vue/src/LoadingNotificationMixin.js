@@ -1,3 +1,5 @@
+import router from "./router";
+
 export default {
     methods: {
         startLoading() {
@@ -35,6 +37,18 @@ export default {
                 position: 'top-center',
                 title: 'Successfully submited!',
             })
+        },
+        openSuccessEditNotification(){
+            const noti = this.$vs.notification({
+                color: 'success',
+                position: 'top-center',
+                title: 'Successfully edited!',
+            })
+        },
+        redirectToBudgetTimeout(){
+            setTimeout(function(){
+                router.push({name:'Dashboard'})
+                window.location.reload();
+            },2000);
         }
-
 }}

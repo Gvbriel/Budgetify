@@ -56,7 +56,11 @@ export default {
 }
 
 .margin {
-  margin-top: 6%;
+  margin-top: 100px;
+}
+
+@media screen and (max-width: 768px) {
+
 }
 
 /*.center {*/

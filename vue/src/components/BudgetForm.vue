@@ -1,11 +1,12 @@
 <template>
-  <div class="container-fluid w-50 p-0">
+  <div class="container-fluid w-75 p-0">
 
-    <form v-loading="isLoading" class="justify-content-center">
+    <form>
 
       <div class="m-0 p-0 mx-auto">
-        <div class="row justify-content-around">
-          <div class="col-lg-4 col-12">
+        <div class="row m-2 justify-content-center">
+          <div class="col-lg-2"></div>
+          <div class="col-lg-4 offset-lg-2 m-2 col-12">
               <vs-switch v-model="sizeForm.type">
                 <template #off>
                   Spending
@@ -16,7 +17,7 @@
               </vs-switch>
           </div>
 
-          <div class="col-lg-8 col-12">
+          <div class="col-lg-6 m-2 col-12">
             <vs-row>
               <vs-radio v-model="sizeForm.is_recurring" val="1">
                 Recurring
@@ -29,15 +30,15 @@
           </div>
         </div>
 
-        <div class="row mt-4 justify-content-center">
-          <div class="col-lg-4 col-12">
+        <div class="row mr-4 ml-4 justify-content-center">
+          <div class="col-lg-4 col-12 m-2">
               <vs-input
                   primary
                   v-model="sizeForm.title"
                   placeholder="Title"
               />
           </div>
-          <div class="col-lg-4 col-12">
+          <div class="col-lg-4 col-12 m-2">
             <vs-input success icon-before v-model="sizeForm.amount" placeholder="Amount">
               <template #icon>
                 <i class='bx bx-money'></i>
@@ -46,14 +47,14 @@
           </div>
         </div>
 
-        <div class="row mt-4 justify-content-center">
-          <div class="col-8">
-            <vs-input width="100%" v-model="sizeForm.description" placeholder="Description"/>
+        <div class="row ml-4 mr-4 justify-content-center">
+          <div class="col-lg-4 col-12">
+            <vs-input class="width" v-model="sizeForm.description" placeholder="Description"/>
           </div>
         </div>
 
-        <div class="row mt-4 justify-content-center">
-          <div class="col-lg-4 col-12">
+        <div class="row m-4 justify-content-center">
+          <div class="col-lg-5 col-12 m-2">
             <vs-select
                 filter
                 placeholder="Choose card"
@@ -72,7 +73,7 @@
             </vs-select>
           </div>
 
-          <div class="col-lg-4 col-12">
+          <div class="col-lg-4 col-12 m-2">
             <vs-select placeholder="Choose category" v-model="sizeForm.category_id" :key="allCategories.length">
               <vs-option v-for="item in allCategories" :key="item.id" :label="item.name" :value="item.id">
                 {{item.name}}
@@ -81,19 +82,29 @@
           </div>
         </div>
 
-        <div class="row mt-4 justify-content-center">
-          <div class="col-lg-4 col-12">
-            <vs-input
-                placeholder="Choose date"
-                type="date"
+        <div class="row m-4 justify-content-center">
+          <div class="col-lg-4 m-1 col-12">
+<!--            <vs-input-->
+<!--                placeholder="Choose date"-->
+<!--                type="date"-->
+<!--                v-model="sizeForm.date"-->
+<!--            />-->
+            <el-date-picker
                 v-model="sizeForm.date"
-            />
+                type="date"
+                placeholder="Pick a day"
+            >
+            </el-date-picker>
           </div>
-          <div class="col-lg-4 col-12">
-            <vs-button @click="onSubmit">
-              {{this.actionType}}
-            </vs-button>
-          </div>
+        </div>
+
+        <div class="row  justify-content-center">
+<!--          <el-form-item size="medium">-->
+<!--            <el-button type="primary" @click="onSubmit">{{ this.actionType }}</el-button>-->
+<!--            <el-button @click="redirect">Cancel</el-button>-->
+<!--          </el-form-item>-->
+            <vs-button @click="onSubmit">Submit</vs-button>
+            <vs-button @click="redirect" flat>Cancel</vs-button>
         </div>
       </div>
     </form>
@@ -117,7 +128,7 @@ export default {
       active: 0,
       sizeForm: {
         title: '',
-        type: 'Spending',
+        type: true,
         date: '',
         card_id: '',
         description: '',
@@ -143,19 +154,34 @@ export default {
     ...mapActions(['addBudget', 'fetchSortedCards', 'fetchCategories', 'updateBudget']),
     onSubmit(e) {
       e.preventDefault();
+      let loading = this.startLoading()
+      this.setType()
       if (this.actionType == 'Edit') {
-        console.log
         this.updateBudget(this.sizeForm).then((response)=>{
           console.log(response)
-          this.validated = true
-          this.validatedForm()
+          this.openSuccessEditNotification()
+          this.redirectToBudgetTimeout()
+        }).catch((error)=>{
+          if(error.response.status === 422){
+            this.open422Notification()
+          }else{
+            this.openProblemNotificationDuration()
+          }
         })
       } else {
-        this.addBudget(this.sizeForm).then(()=>{
-          this.validated = true
-          this.validatedForm()
-        });
+        this.addBudget(this.sizeForm).then((response)=>{
+          console.log(response)
+          this.openSuccessSubmitNotification()
+          this.redirectToBudgetTimeout()
+        }).catch((error)=>{
+          if(error.response.status === 422){
+            this.open422Notification()
+          }else{
+            this.openProblemNotificationDuration()
+          }
+        })
       }
+      loading.close()
     },
     validatedForm(e){
       if(this.validated){
@@ -166,16 +192,28 @@ export default {
         e.preventDefault()
       }
     },
-    redirect() {
-      router.go(-1);
+    redirect(e) {
+      e.preventDefault();
+      router.push({name: 'Budget'});
     },
     setForm() {
       if (this.actionType == 'Edit') {
         this.sizeForm = this.form
       }
     },
+    setType(){
+      let type = this.sizeForm.type
+      if(type === false){
+        this.sizeForm.type = 'Spending'
+      }else if(type === true){
+        this.sizeForm.type = 'Income'
+      }
+    },
     checkForm(e){
 
+    },
+    show(){
+      console.log(this.sizeForm.type)
     }
   }
 }

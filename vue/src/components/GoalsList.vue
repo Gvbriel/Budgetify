@@ -24,7 +24,7 @@
                     Confirm
                   </h4>
                   <p>
-                    Are you sure to delete this? By doing so you cannot recover the data.
+                    You are sure to delete this user, by doing so you cannot recover the data
                   </p>
                   <footer>
                     <vs-button @click="goal.is_active=false, handleDelete(goal.id)" danger block>

@@ -27,18 +27,26 @@ const actions = {
         commit("setBudget", response.data);
     },
     async addBudget({commit}, payload) {
-        payload.date = formatDate(payload.date);
-        console.log(payload.date);
-        const response = await axios.post('/budget', payload);
-
-        commit("newBudget", response.data);
+        return new Promise((resolve, reject) => {
+            payload.date = formatDate(payload.date);
+            console.log(payload.date);
+            const response = axios.post('/budget', payload).then((response) => {
+                commit("newBudget", response.data);
+                resolve(response)
+            }).catch((error) => reject(error))
+        })
     },
     async updateBudget({commit}, payload) {
-        const response = await axios.put('/budget' + `/${payload.id}`, payload).then((response) => {
-            commit("updateBudget", response.data);
-            console.log(response);
-            window.location.reload();
-        });
+        return new Promise((resolve, reject) => {
+            const response = axios.put('/budget' + `/${payload.id}`, payload).then((response) => {
+                commit("updateBudget", response.data);
+                console.log(response)
+                resolve(response)
+            }).catch((error) =>{
+                reject(error)
+            })
+        })
+
     },
     async deleteBudget({commit}, id) {
         const response = await axios.delete('/budget' + `/${id}`).then(() => {

@@ -21,7 +21,7 @@
 <!--      </a>-->
 <!--    </template>-->
 <!--  </div>-->
-    <vs-navbar center-collapsed v-model="active">
+    <vs-navbar center-collapsed collapse v-model="active">
 
       <template #left>
           <vs-navbar-item v-if="checkAuth()" to="/" :active="active == 'main'" id="main">

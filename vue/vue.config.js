@@ -4,5 +4,9 @@ module.exports = {
       preProcessor: 'stylus',
       patterns: []
     }
-  }
+  },
+
+  transpileDependencies: [
+    'vuetify'
+  ]
 }

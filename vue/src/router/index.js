@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Home from '../views/Home.vue'
 import MainWindow from "@/views/MainWindow";
 import BudgetForm from "@/components/BudgetForm";
 import Login from "@/views/user/Login";
@@ -9,7 +8,6 @@ import CardsList from "@/components/CardsList";
 import CardForm from "@/components/CardForm";
 import Dashboard from "../components/Dashboard";
 import CardDetails from "../components/CardDetails";
-import SavingsList from "../components/SavingsList";
 import GoalsList from "../components/GoalsList";
 import GoalForm from "../components/GoalForm";
 

@@ -14,7 +14,7 @@
           </template>
         </vs-input>
 
-        <vs-select class="mt-2 col-4 text-center" align="center" placeholder="Choose currency" v-model="goal.currency" :key="getCurrencies.length">
+        <vs-select class="mt-2 col-4 text-center" align="center" placeholder="Choose currency" v-model="goal.currency">
           <vs-option align="center" class="p-1" v-for="c in this.getCurrencies" :label="c.currency" :value="c.id" :key="c.id">
             {{ c.name }}
           </vs-option>
@@ -52,7 +52,7 @@ export default {
       e.preventDefault();
       const loading = this.startLoading()
       this.submitGoal(this.goal).then((response)=>{
-        this.openNotification('top-center', 'success', 'Success!')
+        this.openNotification('top-center', 'success', 'Success! You can login now.')
         this.isLoading = false
         loading.close()
         router.push({name: 'GoalsList'});
